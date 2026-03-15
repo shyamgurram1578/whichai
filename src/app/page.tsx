@@ -1,64 +1,57 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Bot, Zap, Shield, BarChart3, ArrowRight, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Sparkles, ArrowRight, Clock, Newspaper, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { supabase } from "@/lib/supabase";
+import { getAllProducts, getAllNews, timeAgo, type AIProduct, type AINewsArticle } from "@/lib/data";
+import ProductCard from "@/components/ProductCard";
+import NewsCard from "@/components/NewsCard";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" as const },
-  }),
-};
+// ============================================================
+// 8-hour countdown timer
+// ============================================================
+function useCountdown() {
+  const EIGHT_HOURS = 8 * 60 * 60 * 1000;
 
-const features = [
-  {
-    icon: Bot,
-    title: "Every Model, One Place",
-    description:
-      "Access GPT-5, Claude 4.6, Gemini Ultra, Llama 4, and dozens more through a single unified interface.",
-  },
-  {
-    icon: BarChart3,
-    title: "Real-Time Benchmarks",
-    description:
-      "Live performance comparisons across speed, accuracy, cost, and context length. Updated every hour.",
-  },
-  {
-    icon: Shield,
-    title: "Enterprise Security",
-    description:
-      "SOC 2 compliant infrastructure with end-to-end encryption. Your data never trains anyone's models.",
-  },
-  {
-    icon: Zap,
-    title: "Lightning-Fast API",
-    description:
-      "Sub-100ms routing to the fastest available provider. Smart fallbacks keep your apps running 24/7.",
-  },
-];
+  function getTimeLeft() {
+    const now = Date.now();
+    const elapsed = now % EIGHT_HOURS;
+    return EIGHT_HOURS - elapsed;
+  }
 
+  const [timeLeft, setTimeLeft] = useState(getTimeLeft());
+
+  useEffect(() => {
+    const interval = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+// ============================================================
+// Visitor Counter
+// ============================================================
 function VisitorCounter() {
   const [count, setCount] = useState<number | null>(null);
 
   useEffect(() => {
     async function trackVisit() {
-      // Check if this browser session already counted
       const alreadyCounted = sessionStorage.getItem("whichai_counted");
-
       if (!alreadyCounted) {
-        // New visit — increment and get new total
         const { data, error } = await supabase.rpc("increment_visitor_count");
         if (!error && data) {
           setCount(data as number);
           sessionStorage.setItem("whichai_counted", "1");
         }
       } else {
-        // Already counted this session — just read current total
         const { data, error } = await supabase.rpc("get_visitor_count");
         if (!error && data) {
           setCount(data as number);
@@ -74,16 +67,16 @@ function VisitorCounter() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 2, duration: 0.8 }}
+      transition={{ delay: 1.5, duration: 0.8 }}
       className="fixed bottom-6 right-6 z-50"
     >
-      <div className="glass rounded-full px-4 py-2 flex items-center gap-2 animate-counter-pulse">
-        <span className="relative flex h-2.5 w-2.5">
+      <div className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2 border border-gray-200 shadow-sm">
+        <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
         </span>
-        <span className="text-sm text-slate-500">
-          <span className="font-semibold text-slate-800">{count.toLocaleString()}</span>{" "}
+        <span className="text-xs text-slate-500">
+          <span className="font-semibold text-slate-700">{count.toLocaleString()}</span>{" "}
           Total Visitors
         </span>
       </div>
@@ -91,20 +84,129 @@ function VisitorCounter() {
   );
 }
 
-export default function Home() {
+// ============================================================
+// Search bar with autocomplete
+// ============================================================
+function SmartSearch({ products }: { products: AIProduct[] }) {
+  const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const suggestions = useMemo(() => {
+    const q = query.toLowerCase().trim();
+    if (!q || q.length < 2) return [];
+    return products
+      .filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.provider.toLowerCase().includes(q) ||
+          p.slug.toLowerCase().includes(q)
+      )
+      .slice(0, 6);
+  }, [query, products]);
+
+  function navigate(slug: string) {
+    setQuery("");
+    setFocused(false);
+    router.push(`/product/${slug}`);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter" && query.trim()) {
+      if (suggestions.length > 0) {
+        navigate(suggestions[0].slug);
+      } else {
+        router.push(`/explore?q=${encodeURIComponent(query.trim())}`);
+      }
+    }
+  }
+
   return (
-    <div className="min-h-screen relative overflow-hidden bg-white">
-      {/* Subtle gradient at top that fades to white */}
+    <div className="relative w-full max-w-2xl mx-auto">
+      <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 z-10" />
+      <input
+        ref={inputRef}
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setTimeout(() => setFocused(false), 200)}
+        onKeyDown={handleKeyDown}
+        placeholder="Search AI models... (e.g. ChatGPT, Gemini, Claude)"
+        className="w-full pl-14 pr-6 py-4 rounded-2xl bg-white border border-gray-200 text-slate-900 placeholder-slate-400 text-lg focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 transition-all shadow-sm"
+      />
+
+      <AnimatePresence>
+        {focused && suggestions.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-lg z-50 overflow-hidden"
+          >
+            <div className="p-2">
+              <p className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                Live Suggestions
+              </p>
+              {suggestions.map((p) => (
+                <button
+                  key={p.id}
+                  onMouseDown={() => navigate(p.slug)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left hover:bg-slate-50 transition-colors"
+                >
+                  <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-100 to-cyan-100 flex items-center justify-center text-xs font-bold text-slate-700 shrink-0">
+                    {p.name[0]}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-slate-900 truncate">{p.name}</p>
+                    <p className="text-[11px] text-slate-400">{p.provider} · {p.category}</p>
+                  </div>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-300" />
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ============================================================
+// Main Page
+// ============================================================
+export default function Home() {
+  const [products, setProducts] = useState<AIProduct[]>([]);
+  const [news, setNews] = useState<AINewsArticle[]>([]);
+  const [loading, setLoading] = useState(true);
+  const countdown = useCountdown();
+
+  useEffect(() => {
+    async function load() {
+      const [prods, articles] = await Promise.all([getAllProducts(), getAllNews()]);
+      setProducts(prods);
+      setNews(articles);
+      setLoading(false);
+    }
+    load();
+  }, []);
+
+  const sortedNews = useMemo(
+    () => [...news].sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()),
+    [news]
+  );
+
+  return (
+    <div className="min-h-screen relative overflow-hidden bg-gray-50">
+      {/* Subtle background accents */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-purple-200/40 rounded-full blur-[120px]" />
-        <div className="absolute top-0 -left-40 w-[500px] h-[500px] bg-cyan-200/30 rounded-full blur-[120px]" />
-        <div className="absolute top-1/3 right-1/3 w-96 h-96 bg-pink-200/20 rounded-full blur-[120px]" />
-        {/* White fade overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white" style={{ top: '40%' }} />
+        <div className="absolute -top-40 -right-40 w-[400px] h-[400px] bg-purple-100/40 rounded-full blur-[120px]" />
+        <div className="absolute top-0 -left-40 w-[400px] h-[400px] bg-cyan-100/30 rounded-full blur-[120px]" />
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 flex items-center justify-between px-6 md:px-12 py-6 border-b border-gray-100">
+      <nav className="relative z-20 flex items-center justify-between px-6 md:px-12 py-5 border-b border-gray-100 bg-white/80 backdrop-blur-sm">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -148,118 +250,103 @@ export default function Home() {
             className="relative group px-6 py-2.5 rounded-full font-semibold text-sm text-white transition-all duration-300 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-gradient-animate hover:shadow-[0_0_25px_rgba(168,85,247,0.4)]"
           >
             Join whichai.cloud
-            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300" />
           </Link>
         </motion.div>
       </nav>
 
-      {/* Hero */}
-      <section className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-20 pb-32 md:pt-32 md:pb-40">
+      {/* Header + Search */}
+      <section className="relative z-10 px-6 md:px-12 pt-8 pb-6 max-w-[1400px] mx-auto">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-4xl"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-6"
         >
-          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full px-4 py-1.5 mb-8 text-sm text-slate-600 shadow-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
-            </span>
-            Now supporting 50+ AI models
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold leading-tight tracking-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight tracking-tight mb-1">
             <span className="bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 bg-clip-text text-transparent">
               Compare. Connect. Conquer.
             </span>
-            <br />
-            <span className="bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent bg-gradient-animate">
-              The World&apos;s AI at Your Fingertips.
-            </span>
           </h1>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="mt-6 text-lg md:text-xl text-slate-500 max-w-2xl mx-auto"
-          >
-            One platform to access, compare, and deploy every major AI model.
-            Exclusive member rates. Enterprise-grade reliability.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Link
-              href="/register"
-              className="group flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-white bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-gradient-animate hover:shadow-[0_0_30px_rgba(168,85,247,0.4)] transition-all duration-300"
-            >
-              Get Started Free
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/explore"
-              className="px-8 py-3.5 rounded-full font-semibold text-slate-600 bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-300"
-            >
-              Explore AI Tools
-            </Link>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Features */}
-      <section className="relative z-10 px-6 md:px-12 pb-32">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, i) => (
-            <motion.div
-              key={feature.title}
-              custom={i}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
-              variants={fadeUp}
-              className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md hover:border-purple-200 transition-all duration-300 group"
-            >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-100 to-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <feature.icon className="w-6 h-6 text-purple-500" />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                {feature.description}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Trusted by */}
-      <section className="relative z-10 px-6 pb-20">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="text-center"
-        >
-          <p className="text-sm text-slate-400 uppercase tracking-widest mb-6">
-            Trusted by teams at
+          <p className="text-base md:text-lg bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent font-semibold bg-gradient-animate">
+            The World&apos;s AI at Your Fingertips.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 text-slate-300 font-semibold text-lg">
-            {["Stripe", "Vercel", "Linear", "Notion", "Figma"].map((name) => (
-              <span key={name} className="hover:text-slate-500 transition-colors">
-                {name}
-              </span>
-            ))}
-          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.5 }}
+        >
+          <SmartSearch products={products} />
         </motion.div>
       </section>
+
+      {/* 20/80 Split */}
+      <main className="relative z-10 px-6 md:px-12 pb-20 max-w-[1400px] mx-auto">
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+          </div>
+        ) : (
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Left Sidebar — 20% — News */}
+            <aside className="lg:w-1/5 lg:min-w-[240px]">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+              >
+                {/* Update timer */}
+                <div className="mb-4 flex items-center gap-2 bg-slate-900 text-white rounded-xl px-4 py-2.5">
+                  <Clock className="w-4 h-4 text-cyan-400" />
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-slate-400 leading-none mb-0.5">Next update in</p>
+                    <p className="text-sm font-mono font-bold text-cyan-400 tracking-wide">{countdown}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 mb-3">
+                  <Newspaper className="w-4 h-4 text-purple-500" />
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">
+                    AI News Corner
+                  </h2>
+                </div>
+
+                <div className="flex flex-col gap-2.5 lg:max-h-[calc(100vh-280px)] lg:overflow-y-auto lg:pr-1">
+                  {sortedNews.map((article, i) => (
+                    <NewsCard key={article.id} article={article} index={i} />
+                  ))}
+                  {sortedNews.length === 0 && (
+                    <p className="text-xs text-slate-400 py-4 text-center">No news yet</p>
+                  )}
+                </div>
+              </motion.div>
+            </aside>
+
+            {/* Right Main Content — 80% */}
+            <div className="flex-1 lg:w-4/5">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.25 }}
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="w-4 h-4 text-cyan-500" />
+                  <h2 className="text-sm font-semibold text-slate-600 uppercase tracking-wider">
+                    Featured AI Tools
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {products.map((product, i) => (
+                    <ProductCard key={product.id} product={product} index={i} />
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        )}
+      </main>
 
       <VisitorCounter />
     </div>
