@@ -117,7 +117,7 @@ function SmartSearch({ products }: { products: AIProduct[] }) {
       if (suggestions.length > 0) {
         navigate(suggestions[0].slug);
       } else {
-        router.push(`/explore?q=${encodeURIComponent(query.trim())}`);
+        router.push(`/compare`);
       }
     }
   }
@@ -226,7 +226,6 @@ export default function Home() {
           className="hidden md:flex items-center gap-1"
         >
           {[
-            { href: "/explore", label: "Explore" },
             { href: "/compare", label: "Compare" },
             { href: "/dashboard", label: "Dashboard" },
           ].map((link) => (

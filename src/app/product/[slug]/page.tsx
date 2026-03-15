@@ -189,11 +189,11 @@ export default function ProductPage() {
         <div className="flex flex-col items-center justify-center py-32 text-slate-400">
           <p className="text-xl">Product not found</p>
           <Link
-            href="/explore"
+            href="/"
             className="mt-4 text-purple-500 hover:text-purple-700 text-sm flex items-center gap-1"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Explore
+            Back to Home
           </Link>
         </div>
       </div>
@@ -217,11 +217,11 @@ export default function ProductPage() {
           className="mb-6"
         >
           <Link
-            href="/explore"
+            href="/"
             className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-700 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Explore
+            Back to Home
           </Link>
         </motion.div>
 
