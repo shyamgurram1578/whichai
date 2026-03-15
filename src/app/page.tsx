@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Bot, Zap, Shield, BarChart3, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -42,21 +43,32 @@ const features = [
 ];
 
 function VisitorCounter() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState<number | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("whichai_visitor_seed");
-    const seed = stored ? parseInt(stored) : Math.floor(Math.random() * 500) + 1200;
-    if (!stored) localStorage.setItem("whichai_visitor_seed", seed.toString());
-    setCount(seed);
+    async function trackVisit() {
+      // Check if this browser session already counted
+      const alreadyCounted = sessionStorage.getItem("whichai_counted");
 
-    const interval = setInterval(() => {
-      setCount((c) => c + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 3));
-    }, 4000);
-    return () => clearInterval(interval);
+      if (!alreadyCounted) {
+        // New visit — increment and get new total
+        const { data, error } = await supabase.rpc("increment_visitor_count");
+        if (!error && data) {
+          setCount(data as number);
+          sessionStorage.setItem("whichai_counted", "1");
+        }
+      } else {
+        // Already counted this session — just read current total
+        const { data, error } = await supabase.rpc("get_visitor_count");
+        if (!error && data) {
+          setCount(data as number);
+        }
+      }
+    }
+    trackVisit();
   }, []);
 
-  if (count === 0) return null;
+  if (count === null) return null;
 
   return (
     <motion.div
@@ -72,7 +84,7 @@ function VisitorCounter() {
         </span>
         <span className="text-sm text-slate-500">
           <span className="font-semibold text-slate-800">{count.toLocaleString()}</span>{" "}
-          Live Users Exploring
+          Total Visitors
         </span>
       </div>
     </motion.div>
