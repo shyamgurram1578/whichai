@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
-  const next = searchParams.get('next') ?? '/profile/setup';
+  const next = searchParams.get('next') ?? '/marketplace';
 
   if (code) {
     const supabase = createClient(
