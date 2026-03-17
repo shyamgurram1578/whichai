@@ -11,16 +11,16 @@ const RSS_FEEDS = [
   { url: 'https://venturebeat.com/category/ai/feed/', source: 'VentureBeat' },
 ];
 
-// ── Minimal RSS/Atom parser (no external deps) ──────────────────────────────
+// ── Minimal RSS/Atom parser (no external deps) ───────────────────────────────────────────
 
 function extractTag(xml: string, tag: string): string | null {
-  const regex = new RegExp(`<${tag}[^>]*>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?<\\/${tag}>`, 'i');
+  const regex = new RegExp(`<${tag}[^>]*>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?</${tag}>`, 'i');
   const match = xml.match(regex);
   return match ? match[1].trim() : null;
 }
 
 function extractAtomHref(block: string): string | null {
-  const match = block.match(/<link[^>]+href=["']([^"']+)["'][^>]*\/?>/i);
+  const match = block.match(/<link[^>]+href=["']([^"']+)["'][^>]*\/?>\s*/i);
   return match ? match[1] : null;
 }
 
@@ -40,9 +40,8 @@ interface RawItem {
   publishedAt: Date;
 }
 
-function parseItems(xml: string, source: string): RawItem[] {
+function parseItems(xml: string): RawItem[] {
   const items: RawItem[] = [];
-  // Match both RSS <item> and Atom <entry>
   const blockRegex = /<(?:item|entry)[\s>]([\s\S]*?)<\/(?:item|entry)>/gi;
   let match: RegExpExecArray | null;
 
@@ -71,16 +70,9 @@ function parseItems(xml: string, source: string): RawItem[] {
   return items;
 }
 
-// ── Route handlers ───────────────────────────────────────────────────────────
+// ── Shared refresh logic ───────────────────────────────────────────────────────────────
 
-export async function POST(request: Request) {
-  // Protect with optional secret (set CRON_SECRET env var)
-  const authHeader = request.headers.get('authorization');
-  const secret = process.env.CRON_SECRET;
-  if (secret && authHeader !== `Bearer ${secret}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
+async function runRefresh() {
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   let totalInserted = 0;
@@ -99,7 +91,7 @@ export async function POST(request: Request) {
       }
 
       const xml = await res.text();
-      const items = parseItems(xml, feed.source);
+      const items = parseItems(xml);
 
       if (items.length === 0) continue;
 
@@ -112,7 +104,6 @@ export async function POST(request: Request) {
         published_at: item.publishedAt.toISOString(),
       }));
 
-      // Upsert on url — skip duplicates
       const { error, data } = await supabase
         .from('ai_news')
         .upsert(rows, { onConflict: 'url', ignoreDuplicates: true })
@@ -128,20 +119,46 @@ export async function POST(request: Request) {
     }
   }
 
+  return { totalInserted, errors };
+}
+
+function isAuthorized(request: Request): boolean {
+  const authHeader = request.headers.get('authorization');
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return true;
+  return authHeader === `Bearer ${secret}`;
+}
+
+// ── Route handlers ────────────────────────────────────────────────────────────────────────
+
+// GET: called by Vercel Cron daily at midnight UTC (vercel.json)
+export async function GET(request: Request) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { totalInserted, errors } = await runRefresh();
+
   return NextResponse.json({
     success: true,
     inserted: totalInserted,
     errors: errors.length > 0 ? errors : undefined,
-    next_refresh: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
+    next_refresh: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
   });
 }
 
-export async function GET() {
+// POST: manual trigger
+export async function POST(request: Request) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { totalInserted, errors } = await runRefresh();
+
   return NextResponse.json({
-    status: 'ok',
-    endpoint: '/api/refresh-news',
-    method: 'POST',
-    feeds: RSS_FEEDS.map((f) => f.source),
-    description: 'Called by Vercel Cron every 8 hours to scrape AI news from RSS feeds',
+    success: true,
+    inserted: totalInserted,
+    errors: errors.length > 0 ? errors : undefined,
+    next_refresh: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
   });
 }
