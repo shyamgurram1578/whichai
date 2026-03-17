@@ -255,7 +255,7 @@ export const marketplaceDeals: MarketplaceDeal[] = [
   // LLM Subscriptions
   {
     id: 'deal-5',
-    name: 'ChatGPT Pro â Student Deal',
+    name: 'ChatGPT Pro — Student Deal',
     description: 'Full ChatGPT Pro access with GPT-5, code interpreter, DALL-E, and advanced voice. Verified .edu required.',
     category: 'llm-subscriptions',
     original_price: 200,
@@ -268,7 +268,7 @@ export const marketplaceDeals: MarketplaceDeal[] = [
   },
   {
     id: 'deal-6',
-    name: 'Claude Pro â Student Plan',
+    name: 'Claude Pro — Student Plan',
     description: 'Unlimited Claude 4.6 Opus access with 5x usage limits. Available to verified students.',
     category: 'llm-subscriptions',
     original_price: 20,
@@ -281,7 +281,7 @@ export const marketplaceDeals: MarketplaceDeal[] = [
   },
   {
     id: 'deal-7',
-    name: 'Gemini Advanced â Annual',
+    name: 'Gemini Advanced — Annual',
     description: 'Gemini 2.5 Ultra with 2M context, Gems, and Google ecosystem integration. Save with annual billing.',
     category: 'llm-subscriptions',
     original_price: 240,
@@ -294,7 +294,7 @@ export const marketplaceDeals: MarketplaceDeal[] = [
   },
   {
     id: 'deal-8',
-    name: 'Team Bulk Seats â ChatGPT',
+    name: 'Team Bulk Seats — ChatGPT',
     description: '10-seat team bundle for ChatGPT Team with shared workspace, admin console, and priority support.',
     category: 'llm-subscriptions',
     original_price: 300,
@@ -348,7 +348,7 @@ export const marketplaceDeals: MarketplaceDeal[] = [
   },
   {
     id: 'deal-12',
-    name: 'RTX 4090 Cluster â 4x GPUs',
+    name: 'RTX 4090 Cluster — 4x GPUs',
     description: '4x RTX 4090 with NVLink, 512GB RAM, 2TB NVMe. Perfect for inference and small-scale training.',
     category: 'gpu-deals',
     original_price: 2.40,
@@ -379,7 +379,7 @@ export const categories = [
 ] as const;
 
 // ============================================================
-// Full AI Marketplace â v2 Listings
+// Full AI Marketplace — v2 Listings
 // ============================================================
 
 export type BigCategory = 'digital-assets' | 'compute-hub' | 'hardware-corner';
@@ -409,7 +409,7 @@ export interface MarketplaceListing {
 }
 
 export const allListings: MarketplaceListing[] = [
-  // ââ Digital Assets ââââââââââââââââââââââââââââââââââââââââââ
+  // ── Digital Assets ──────────────────────────────────────────
   {
     id: 'listing-1',
     name: 'Ultimate ChatGPT Prompt Bundle',
@@ -423,7 +423,7 @@ export const allListings: MarketplaceListing[] = [
     badge: 'Bestseller',
     featured: true,
     tags: ['GPT-4', 'prompts', 'productivity'],
-    emoji: 'ð',
+    emoji: '',
   },
   {
     id: 'listing-2',
@@ -437,11 +437,11 @@ export const allListings: MarketplaceListing[] = [
     badge: 'Verified',
     featured: true,
     tags: ['legal', 'agent', 'GPT-4'],
-    emoji: 'âï¸',
+    emoji: '',
   },
   {
     id: 'listing-3',
-    name: 'Anime LoRA â Studio Ghibli Style',
+    name: 'Anime LoRA — Studio Ghibli Style',
     description: 'Fine-tuned LoRA for SDXL that generates beautiful Ghibli-inspired scenes. Works with ComfyUI and A1111. Includes 20 trigger words.',
     bigCategory: 'digital-assets',
     subcategory: 'fine-tuned-model',
@@ -451,7 +451,7 @@ export const allListings: MarketplaceListing[] = [
     badge: undefined,
     featured: false,
     tags: ['LoRA', 'SDXL', 'image-gen', 'anime'],
-    emoji: 'ð¨',
+    emoji: '',
   },
   {
     id: 'listing-4',
@@ -465,7 +465,7 @@ export const allListings: MarketplaceListing[] = [
     badge: 'Professional',
     featured: false,
     tags: ['Whisper', 'medical', 'transcription'],
-    emoji: 'ð¥',
+    emoji: '',
   },
   {
     id: 'listing-5',
@@ -479,11 +479,11 @@ export const allListings: MarketplaceListing[] = [
     badge: 'New',
     featured: false,
     tags: ['ecommerce', 'Shopify', 'Claude', 'SEO'],
-    emoji: 'ðï¸',
+    emoji: '',
   },
   {
     id: 'listing-6',
-    name: 'NRI Tax Bot â Indian Expats (US)',
+    name: 'NRI Tax Bot — Indian Expats (US)',
     description: 'AI assistant specialized in DTAA, FEMA compliance, and NRI investment rules. Answers tax questions for Indians in the US.',
     bigCategory: 'digital-assets',
     subcategory: 'custom-agent',
@@ -493,13 +493,13 @@ export const allListings: MarketplaceListing[] = [
     badge: 'Popular',
     featured: true,
     tags: ['tax', 'NRI', 'India', 'agent'],
-    emoji: 'ð®ð³',
+    emoji: '',
   },
-  // ââ Compute Hub ââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Compute Hub ──────────────────────────────────────────────
   {
     id: 'listing-7',
-    name: 'RTX 4090 â On-Demand Rental',
-    description: 'Idle RTX 4090 24GB for rent. ~180 TFLOPS FP16. Great for inference, image gen, and LoRA training. Available 9amâ9pm PST.',
+    name: 'RTX 4090 — On-Demand Rental',
+    description: 'Idle RTX 4090 24GB for rent. ~180 TFLOPS FP16. Great for inference, image gen, and LoRA training. Available 9am–9pm PST.',
     bigCategory: 'compute-hub',
     subcategory: 'p2p-gpu',
     price: 4.20,
@@ -509,11 +509,11 @@ export const allListings: MarketplaceListing[] = [
     badge: 'Hot',
     featured: true,
     tags: ['RTX 4090', 'GPU', 'rental', 'inference'],
-    emoji: 'â¡',
+    emoji: '',
   },
   {
     id: 'listing-8',
-    name: 'OpenAI API Credits â $100 Bundle',
+    name: 'OpenAI API Credits — $100 Bundle',
     description: 'Excess OpenAI API credits from a startup plan. Valid for GPT-4o, o3, DALL-E 3, and Whisper. Transfer via org invite.',
     bigCategory: 'compute-hub',
     subcategory: 'api-tokens',
@@ -524,11 +524,11 @@ export const allListings: MarketplaceListing[] = [
     badge: undefined,
     featured: true,
     tags: ['OpenAI', 'credits', 'API', 'GPT-4o'],
-    emoji: 'ð',
+    emoji: '',
   },
   {
     id: 'listing-9',
-    name: 'Claude Pro â Student Seat',
+    name: 'Claude Pro — Student Seat',
     description: 'Verified student discount for Claude Pro. 5x usage, Claude Opus access. Requires .edu email verification through our portal.',
     bigCategory: 'compute-hub',
     subcategory: 'subscription',
@@ -539,12 +539,12 @@ export const allListings: MarketplaceListing[] = [
     badge: 'Student',
     featured: false,
     tags: ['Claude', 'student', 'Pro', 'Anthropic'],
-    emoji: 'ð',
+    emoji: '',
   },
   {
     id: 'listing-10',
-    name: 'A100 40GB â Spot Instance',
-    description: 'NVIDIA A100 PCIe 40GB spot instance. Ideal for fine-tuning 7Bâ70B models. SSH or Jupyter access included.',
+    name: 'A100 40GB — Spot Instance',
+    description: 'NVIDIA A100 PCIe 40GB spot instance. Ideal for fine-tuning 7B–70B models. SSH or Jupyter access included.',
     bigCategory: 'compute-hub',
     subcategory: 'cloud-gpu',
     price: 1.29,
@@ -554,11 +554,11 @@ export const allListings: MarketplaceListing[] = [
     badge: undefined,
     featured: false,
     tags: ['A100', 'GPU', 'fine-tuning', 'cloud'],
-    emoji: 'ð¥ï¸',
+    emoji: '',
   },
   {
     id: 'listing-11',
-    name: 'Gemini Advanced â Group Buy',
+    name: 'Gemini Advanced — Group Buy',
     description: 'Shared-seat access to Gemini 2.5 Ultra. 2M context window, Google ecosystem, Gems feature. Pay monthly.',
     bigCategory: 'compute-hub',
     subcategory: 'subscription',
@@ -569,12 +569,12 @@ export const allListings: MarketplaceListing[] = [
     badge: 'Best Value',
     featured: true,
     tags: ['Gemini', 'Google', 'subscription', 'group-buy'],
-    emoji: 'â¨',
+    emoji: '',
   },
-  // ââ Hardware Corner ââââââââââââââââââââââââââââââââââââââââââ
+  // ── Hardware Corner ──────────────────────────────────────────
   {
     id: 'listing-12',
-    name: 'RTX 4090 24GB â Like New',
+    name: 'RTX 4090 24GB — Like New',
     description: 'ASUS ROG STRIX RTX 4090 OC. Used 3 months, light gaming only. No mining. Original box, cables, GPU sag bracket. Ships insured.',
     bigCategory: 'hardware-corner',
     subcategory: 'used-gpu',
@@ -585,12 +585,12 @@ export const allListings: MarketplaceListing[] = [
     badge: 'Verified HW',
     featured: true,
     tags: ['RTX 4090', 'GPU', 'NVIDIA', 'used'],
-    emoji: 'ð',
+    emoji: '',
   },
   {
     id: 'listing-13',
     name: 'NVIDIA Jetson Orin Nano Kit',
-    description: 'Jetson Orin Nano 8GB dev kit â 40 TOPS AI. Includes fan, SD card with JetPack 6, camera module, and carry case.',
+    description: 'Jetson Orin Nano 8GB dev kit — 40 TOPS AI. Includes fan, SD card with JetPack 6, camera module, and carry case.',
     bigCategory: 'hardware-corner',
     subcategory: 'ai-kit',
     price: 249,
@@ -599,11 +599,11 @@ export const allListings: MarketplaceListing[] = [
     badge: undefined,
     featured: false,
     tags: ['Jetson', 'NVIDIA', 'edge-AI', 'kit'],
-    emoji: 'ð¤',
+    emoji: '',
   },
   {
     id: 'listing-14',
-    name: 'MacBook Pro M3 Max â AI Ready',
+    name: 'MacBook Pro M3 Max — AI Ready',
     description: '16" MacBook Pro M3 Max, 48GB RAM, 1TB SSD. Pre-loaded with Ollama, LM Studio, and local LLM setup guide.',
     bigCategory: 'hardware-corner',
     subcategory: 'ai-laptop',
@@ -614,7 +614,7 @@ export const allListings: MarketplaceListing[] = [
     badge: 'Certified Refurb',
     featured: true,
     tags: ['MacBook', 'Apple Silicon', 'M3', 'local LLM'],
-    emoji: 'ð»',
+    emoji: '',
   },
   {
     id: 'listing-15',
@@ -628,7 +628,7 @@ export const allListings: MarketplaceListing[] = [
     badge: 'New',
     featured: false,
     tags: ['Raspberry Pi', 'edge-AI', 'HAT', 'vision'],
-    emoji: 'ð«',
+    emoji: '',
   },
 ];
 
