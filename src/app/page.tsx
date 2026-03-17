@@ -6,8 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { supabase } from "@/lib/supabase";
-import { getAllProducts, getAllNews, timeAgo, type AIProduct, type AINewsArticle } from "@/lib/data";
-import ProductCard from "@/components/ProductCard";
+import { getAllProducts, getAllNews, type AIProduct, type AINewsArticle } from "@/lib/data";
 import NewsCard from "@/components/NewsCard";
 
 // ============================================================
@@ -323,24 +322,19 @@ export default function Home() {
             </aside>
 
             {/* Right Main Content — 80% */}
-            <div className="flex-1 lg:w-4/5">
+            <div className="flex-1 lg:w-4/5 flex items-center justify-center">
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.25 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 0.6 }}
+                className="text-center px-4 py-12 max-w-2xl"
               >
-                <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-4 h-4 text-cyan-500" />
-                  <h2 className="text-sm font-semibold text-slate-600 uppercase tracking-wider">
-                    Featured AI Tools
-                  </h2>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {products.map((product, i) => (
-                    <ProductCard key={product.id} product={product} index={i} />
-                  ))}
-                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight tracking-tight mb-4 text-slate-900">
+                  Join Whichai for the best AI Marketplace in the world
+                </h2>
+                <p className="text-base md:text-lg bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent font-semibold bg-gradient-animate">
+                  AI Marketplace: From Prompt to Power, All in One Place.
+                </p>
               </motion.div>
             </div>
           </div>
