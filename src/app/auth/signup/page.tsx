@@ -20,6 +20,7 @@ export default function SignUpPage() {
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const validateEmail = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -54,7 +55,8 @@ export default function SignUpPage() {
       return;
     }
 
-    router.push("/profile/setup");
+    setSuccess(true);
+    setSubmitting(false);
   };
 
   const handleGoogle = async () => {
@@ -98,7 +100,31 @@ export default function SignUpPage() {
         <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 opacity-20 bg-gradient-animate" />
 
         <div className="relative bg-white rounded-3xl p-8 md:p-10 border border-gray-200 shadow-lg">
-          <div className="text-center mb-8">
+          {success ? (
+            <div className="text-center py-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-100 mb-5">
+                <svg className="w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Account created!</h2>
+              <p className="text-slate-500 text-sm mb-6">
+                Check your email to confirm your account, then sign in to start exploring the marketplace.
+              </p>
+              <Link
+                href="/auth/login"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-cyan-500 hover:shadow-lg transition-all"
+              >
+                Go to Sign In
+              </Link>
+              <div className="mt-4">
+                <Link href="/" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">
+                  Back to homepage
+                </Link>
+              </div>
+            </div>
+          ) : (
+          <><div className="text-center mb-8">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -276,6 +302,7 @@ export default function SignUpPage() {
               Sign in
             </Link>
           </p>
+          )}
         </div>
       </motion.div>
     </div>
