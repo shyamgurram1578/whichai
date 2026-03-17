@@ -225,11 +225,11 @@ export default function Home() {
         </motion.div>
       </nav>
 
-      {/* Main layout: 35% news sidebar + 65% hero content */}
+      {/* Main layout: 27% news sidebar + 73% hero content */}
       <div className="relative z-10 flex h-[calc(100vh-73px)]">
 
-        {/* Left sidebar — news corner (35% of page width) */}
-        <aside className="hidden lg:flex flex-col w-[35%] h-full bg-white/80 backdrop-blur-sm border-r border-gray-100 shrink-0">
+        {/* Left sidebar — news corner (27% of page width) */}
+        <aside className="hidden lg:flex flex-col w-[27%] h-full bg-white/80 backdrop-blur-sm border-r border-gray-100 shrink-0">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -262,7 +262,7 @@ export default function Home() {
           </motion.div>
         </aside>
 
-        {/* Right content — hero (65% of page width) */}
+        {/* Right content — hero (73% of page width) */}
         <main className="flex-1 flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
