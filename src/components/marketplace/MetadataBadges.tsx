@@ -1,71 +1,63 @@
 'use client';
 
 import React from 'react';
-import { type TechSpecs } from '@/lib/data';
+import { TechSpecs } from '@/lib/data';
 
 interface MetadataBadgesProps {
   techSpecs?: TechSpecs;
   category: string;
 }
 
-const BADGE_STYLES = {
-  gpuType: 'border border-cyan-500/30 text-cyan-300 bg-cyan-500/10',
-  vram: 'border border-purple-500/30 text-purple-300 bg-purple-500/10',
-  framework: 'border border-emerald-500/30 text-emerald-300 bg-emerald-500/10',
-  tokenCount: 'border border-pink-500/30 text-pink-300 bg-pink-500/10',
-  condition: 'border border-blue-500/30 text-blue-300 bg-blue-500/10',
-};
-
 export default function MetadataBadges({ techSpecs, category }: MetadataBadgesProps) {
   if (!techSpecs) return null;
 
-  const badges: React.ReactNode[] = [];
+  const badges: Array<{ label: string; value: string; color: string }> = [];
 
   if (techSpecs.gpuType) {
-    badges.push(
-      <span key="gpu" className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${BADGE_STYLES.gpuType}`}>
-        🚀 {techSpecs.gpuType}
-      </span>
-    );
+    badges.push({ label: 'GPU', value: techSpecs.gpuType, color: 'cyan' });
   }
 
   if (techSpecs.vram) {
-    badges.push(
-      <span key="vram" className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${BADGE_STYLES.vram}`}>
-        💜 {techSpecs.vram}GB VRAM
-      </span>
-    );
+    badges.push({ label: 'VRAM', value: `${techSpecs.vram}GB`, color: 'purple' });
   }
 
-  if (techSpecs.framework?.length) {
-    badges.push(
-      <span key="fw" className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${BADGE_STYLES.framework}`}>
-        🚤 {techSpecs.framework.slice(0, 2).join(' ')}
-      </span>
-    );
+  if (techSpecs.framework && techSpecs.framework.length > 0) {
+    badges.push({ label: 'FW', value: techSpecs.framework[0], color: 'green' });
   }
 
   if (techSpecs.tokenCount) {
-    badges.push(
-      <span key="tokens" className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${BADGE_STYLES.tokenCount}`}>
-        🚀 {techSpecs.tokenCount.toLocaleString()} tokens
-      </span>
-    );
+    badges.push({
+      label: 'Tokens',
+      value: `${(techSpecs.tokenCount / 1000).toFixed(0)}K`,
+      color: 'pink',
+    });
   }
 
   if (techSpecs.condition) {
-    badges.push(
-      <span key="cond" className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${BADGE_STYLES.condition}`}>
-        🌟 {techSpecs.condition}
-      </span>
-    );
+    badges.push({ label: 'Cond.', value: techSpecs.condition, color: 'blue' });
   }
 
-  if (badges.length === 0) return null;
+  const colorMap: Record<string, { bg: string; border: string; text: string }> = {
+    cyan: { bg: 'bg-cyan-50', border: 'border-cyan-300', text: 'text-cyan-700' },
+    purple: { bg: 'bg-purple-50', border: 'border-purple-300', text: 'text-purple-700' },
+    green: { bg: 'bg-green-50', border: 'border-green-300', text: 'text-green-700' },
+    pink: { bg: 'bg-pink-50', border: 'border-pink-300', text: 'text-pink-700' },
+    blue: { bg: 'bg-blue-50', border: 'border-blue-300', text: 'text-blue-700' },
+  };
 
   return (
-    <div className="flex flex-wrap gap-1">
-      {badges}
+    <div className="flex gap-2 flex-wrap">
+      {badges.map((badge, idx) => {
+        const style = colorMap[badge.color];
+        return (
+          <span
+            key={idx}
+            className={`px-2 py-0.5 text-xs rounded-full ${style.bg} border ${style.border} ${style.text} font-mono`}
+          >
+            {badge.value}
+          </span>
+        );
+      })}
     </div>
   );
 }

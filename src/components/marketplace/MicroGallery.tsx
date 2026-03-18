@@ -27,7 +27,7 @@ export default function MicroGallery({ images, alt, categoryEmoji }: MicroGaller
 
   if (!images || images.length === 0) {
     return (
-      <div className="relative w-full h-40 bg-gradient-to-br from-purple-900/20 to-cyan-900/20 rounded-t-lg flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-40 bg-gradient-to-br from-purple-50 to-cyan-50 rounded-t-lg flex items-center justify-center overflow-hidden">
         {categoryEmoji && <div className="text-6xl opacity-30">{categoryEmoji}</div>}
       </div>
     );
@@ -35,7 +35,7 @@ export default function MicroGallery({ images, alt, categoryEmoji }: MicroGaller
 
   return (
     <div
-      className="relative w-full h-40 bg-black rounded-t-lg overflow-hidden group"
+      className="relative w-full h-40 bg-gray-100 rounded-t-lg overflow-hidden group"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => {
         setIsHovering(false);
