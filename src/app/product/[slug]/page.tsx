@@ -474,7 +474,7 @@ export default function ProductPage() {
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 p-px">
             <div className="bg-white rounded-2xl px-8 py-10 text-center">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">
-                Join Whichai — Explore the World&apos;s Biggest AI Marketplace
+                Join whichAi — Explore the World&apos;s Biggest AI Marketplace
               </h2>
               <p className="text-slate-500 mb-6 text-sm md:text-base">
                 Compare, discover, and unlock the best AI tools — all in one place.
@@ -483,7 +483,7 @@ export default function ProductPage() {
                 href="/auth/signup"
                 className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-sm text-white bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-gradient-animate hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] transition-all duration-300"
               >
-                Join whichai.cloud
+                Join whichAi.cloud
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

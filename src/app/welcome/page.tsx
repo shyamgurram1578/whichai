@@ -96,7 +96,7 @@ export default function WelcomePage() {
       <header className="w-full flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-cyan-500 bg-clip-text text-transparent">
-            whichai
+            whichAi
           </span>
         </Link>
 
@@ -208,7 +208,7 @@ export default function WelcomePage() {
 
       {/* ── Footer ──────────────────────────────────────────── */}
       <footer className="text-center py-6 text-xs text-slate-300">
-        whichai.cloud &copy; {new Date().getFullYear()} — The World&apos;s AI at Your Fingertips
+        whichAi.cloud &copy; {new Date().getFullYear()} — The World&apos;s AI at Your Fingertips
       </footer>
     </div>
   );

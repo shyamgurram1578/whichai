@@ -53,8 +53,8 @@ export default function Navbar() {
     <nav className="relative z-50 flex items-center justify-between px-6 md:px-12 py-5 border-b border-gray-100">
       <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/whichai_icon_nav.svg" alt="whichai logo" width={32} height={29} priority />
-          <span className="text-xl font-bold bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">whichai</span>
+          <Image src="/whichai_icon_nav.svg" alt="whichAi logo" width={32} height={29} priority />
+          <span className="text-xl font-bold bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">whichAi</span>
         </Link>
       </motion.div>
 
