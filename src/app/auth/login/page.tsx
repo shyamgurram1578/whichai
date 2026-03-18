@@ -3,12 +3,13 @@
 import { motion } from "framer-motion";
 import { Sparkles, ArrowLeft, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, FormEvent } from "react";
 import { signIn, signInWithGoogle } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -31,7 +32,8 @@ export default function LoginPage() {
       setSubmitting(false);
       return;
     }
-    router.push("/dashboard");
+    const next = searchParams.get("next") || "/welcome";
+    router.push(next);
   };
 
   const handleGoogle = async () => {
