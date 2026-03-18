@@ -39,8 +39,8 @@ export default function HeroSearchBar({
               : 'bg-gradient-to-r from-purple-500/0 to-cyan-500/0 opacity-0'
           }`} />
 
-          <div className="relative bg-[#0d1117] border border-white/10 hover:border-purple-500/30 rounded-lg p-3 flex items-center gap-3 transition-colors">
-            <Search size={18} className="text-gray-500" />
+          <div className="relative bg-white border border-gray-200 hover:border-purple-400 rounded-lg p-3 flex items-center gap-3 transition-colors shadow-sm">
+            <Search size={18} className="text-gray-400" />
 
             <input
               type="text"
@@ -49,13 +49,13 @@ export default function HeroSearchBar({
               onChange={(e) => onChange(e.target.value)}
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
-              className="flex-1 bg-transparent text-white placeholder-gray-500 outline-none text-sm"
+              className="flex-1 bg-transparent text-slate-900 placeholder-gray-400 outline-none text-sm"
             />
 
             <motion.button
               onClick={onFilterToggle}
               whileHover={{ scale: 1.05 }}
-              className="relative text-gray-400 hover:text-cyan-400 transition-colors"
+              className="relative text-gray-400 hover:text-purple-500 transition-colors"
             >
               <Filter size={18} />
               {filterCount > 0 && (
@@ -79,7 +79,7 @@ export default function HeroSearchBar({
             key={tag}
             whileHover={{ scale: 1.05, y: -2 }}
             onClick={() => onChange(tag.split(' ')[1] || '')}
-            className="px-3 py-1 text-xs rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-200 hover:bg-purple-500/20 hover:border-purple-500/50 transition-all"
+            className="px-3 py-1 text-xs rounded-full bg-purple-50 border border-purple-200 text-purple-600 hover:bg-purple-100 hover:border-purple-300 transition-all"
           >
             {tag}
           </motion.button>

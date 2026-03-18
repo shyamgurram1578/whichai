@@ -50,14 +50,12 @@ export default function CategorySidebar({
 
   return (
     <aside className="sticky top-24 h-fit w-64 flex-shrink-0 hidden lg:block">
-      <div className="glass-dark neon-border-purple rounded-lg p-4 space-y-3">
-        <h3 className="text-lg font-bold text-white mb-6">Categories</h3>
-
+      <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3 shadow-sm">
+        <h3 className="text-lg font-bold text-slate-900 mb-6">Categories</h3>
         {categories.map((category) => {
           const IconComponent = category.icon;
           const isActive = activeCategory === category.key;
           const isExpanded = expanded[category.key];
-
           return (
             <div key={category.key} className="space-y-2">
               <motion.button
@@ -67,8 +65,8 @@ export default function CategorySidebar({
                 }}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
                   isActive
-                    ? 'bg-purple-500/20 border border-purple-500/50 text-purple-200'
-                    : 'text-gray-300 hover:bg-purple-500/10 hover:border hover:border-purple-500/30'
+                    ? 'bg-purple-100 border border-purple-300 text-purple-700'
+                    : 'text-slate-600 hover:bg-purple-50 hover:border hover:border-purple-200'
                 }`}
                 whileHover={{ x: 4 }}
               >
@@ -81,7 +79,6 @@ export default function CategorySidebar({
                   <ChevronDown size={16} />
                 </motion.div>
               </motion.button>
-
               <AnimatePresence>
                 {isExpanded && (
                   <motion.div
@@ -98,8 +95,8 @@ export default function CategorySidebar({
                           onClick={() => onSubChange(sub)}
                           className={`block w-full text-left px-2 py-1.5 text-xs rounded transition-all ${
                             activeSub === sub
-                              ? 'text-cyan-300 bg-cyan-500/10 border-l-2 border-cyan-500'
-                              : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                              ? 'text-cyan-700 bg-cyan-50 border-l-2 border-cyan-500'
+                              : 'text-slate-500 hover:text-slate-800 hover:bg-gray-100'
                           }`}
                           whileHover={{ x: 2 }}
                         >

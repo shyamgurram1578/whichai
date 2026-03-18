@@ -36,26 +36,27 @@ export default function ComputeHeatmap() {
         }))
       );
     };
+
     updateData();
     const timer = setInterval(updateData, 8000);
     return () => clearInterval(timer);
   }, []);
 
   const getColor = (availability: number) => {
-    if (availability > 70) return 'from-green-500/50 to-green-600/50';
-    if (availability > 40) return 'from-yellow-500/50 to-yellow-600/50';
-    return 'from-red-500/50 to-red-600/50';
+    if (availability > 70) return 'from-green-50 to-emerald-50';
+    if (availability > 40) return 'from-yellow-50 to-amber-50';
+    return 'from-red-50 to-rose-50';
   };
 
   const getBorderColor = (availability: number) => {
-    if (availability > 70) return 'border-green-500/50 hover:border-green-400/70';
-    if (availability > 40) return 'border-yellow-500/50 hover:border-yellow-400/70';
-    return 'border-red-500/50 hover:border-red-400/70';
+    if (availability > 70) return 'border-green-300 hover:border-green-500';
+    if (availability > 40) return 'border-yellow-300 hover:border-yellow-500';
+    return 'border-red-300 hover:border-red-500';
   };
 
   return (
     <div className="w-full mb-6">
-      <h3 className="text-white font-semibold mb-4">🌍 Global GPU Availability</h3>
+      <h3 className="text-slate-900 font-semibold mb-4">🌍 Global GPU Availability</h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {data.map((region, idx) => (
           <motion.div
@@ -69,17 +70,26 @@ export default function ComputeHeatmap() {
             whileHover={{ scale: 1.05 }}
           >
             <div className="space-y-2">
-              <p className="text-sm font-semibold text-white">{region.name}</p>
-              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                <motion.div initial={{ width: 0 }} animate={{ width: `${region.availability}%` }} transition={{ duration: 0.5 }} className="h-full bg-gradient-to-r from-cyan-400 to-purple-400" />
+              <p className="text-sm font-semibold text-slate-800">{region.name}</p>
+              <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${region.availability}%` }}
+                  transition={{ duration: 0.5 }}
+                  className="h-full bg-gradient-to-r from-cyan-500 to-purple-500"
+                />
               </div>
-              <div className="text-xs text-gray-300">
+              <div className="text-xs text-slate-600">
                 <p>{region.availability.toFixed(0)}% Available</p>
                 <p>{region.gpuCount} GPUs</p>
               </div>
             </div>
             {hoveredRegion === region.name && (
-              <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="absolute mt-2 px-3 py-2 bg-black/90 rounded text-xs text-white whitespace-nowrap pointer-events-none">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute mt-2 px-3 py-2 bg-slate-900 rounded text-xs text-white whitespace-nowrap pointer-events-none"
+              >
                 ${region.pricePerHour.toFixed(2)}/hr
               </motion.div>
             )}

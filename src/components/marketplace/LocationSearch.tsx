@@ -39,7 +39,7 @@ export default function LocationSearch({
   };
 
   return (
-    <div className="w-full mb-6 glass-dark rounded-lg p-4 border border-white/10">
+    <div className="w-full mb-6 bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           <motion.button
@@ -58,8 +58,8 @@ export default function LocationSearch({
           </motion.button>
 
           {city && (
-            <div className="text-sm text-gray-300">
-              📍 <span className="font-mono text-cyan-300">{city}</span>
+            <div className="text-sm text-slate-600">
+              📍 <span className="font-mono text-cyan-600">{city}</span>
             </div>
           )}
 
@@ -69,9 +69,9 @@ export default function LocationSearch({
         </div>
 
         <div>
-          <label className="text-sm text-gray-300 flex items-center gap-2 mb-2">
+          <label className="text-sm text-slate-600 flex items-center gap-2 mb-2">
             <span>Search Radius</span>
-            <span className="font-semibold text-cyan-300">{radius} miles</span>
+            <span className="font-semibold text-cyan-600">{radius} miles</span>
           </label>
           <input
             type="range"

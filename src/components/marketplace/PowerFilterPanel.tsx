@@ -52,13 +52,13 @@ export default function PowerFilterPanel({
     <div className="w-full mb-6">
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-3 rounded-lg glass-dark neon-border-purple text-white font-semibold transition-all"
+        className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-white border border-gray-200 text-slate-900 font-semibold transition-all shadow-sm hover:border-purple-300"
         whileHover={{ scale: 1.01 }}
       >
         <span className="flex items-center gap-2">
           🎛️ Filters & Sort
           {(filters.frameworks.length > 0 || filters.maxDistance < 500) && (
-            <span className="ml-2 px-2 py-1 bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 text-xs rounded-full">
+            <span className="ml-2 px-2 py-1 bg-cyan-50 border border-cyan-300 text-cyan-700 text-xs rounded-full">
               {filters.frameworks.length + (filters.maxDistance < 500 ? 1 : 0)} active
             </span>
           )}
@@ -77,10 +77,9 @@ export default function PowerFilterPanel({
             transition={{ duration: 0.2 }}
             className="overflow-hidden mt-2"
           >
-            <div className="glass-panel rounded-lg p-6 space-y-6">
-              {/* Sort By */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6 shadow-sm">
               <div>
-                <h4 className="text-sm font-semibold text-white mb-3">Sort By</h4>
+                <h4 className="text-sm font-semibold text-slate-900 mb-3">Sort By</h4>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                   {sortOptions.map((opt) => (
                     <motion.button
@@ -88,8 +87,8 @@ export default function PowerFilterPanel({
                       onClick={() => updateFilter('sortBy', opt.value)}
                       className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                         filters.sortBy === opt.value
-                          ? 'bg-purple-500/30 border border-purple-500/50 text-purple-200'
-                          : 'bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10'
+                          ? 'bg-purple-100 border border-purple-300 text-purple-700'
+                          : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200'
                       }`}
                       whileHover={{ scale: 1.05 }}
                     >
@@ -98,119 +97,46 @@ export default function PowerFilterPanel({
                   ))}
                 </div>
               </div>
-
-              {/* Price Range */}
               <div>
-                <h4 className="text-sm font-semibold text-white mb-3">Price Range</h4>
+                <h4 className="text-sm font-semibold text-slate-900 mb-3">Price Range</h4>
                 <div className="flex gap-4">
                   <div className="flex-1">
-                    <label className="text-xs text-gray-400">Min</label>
-                    <input
-                      type="number"
-                      value={filters.priceRange[0]}
-                      onChange={(e) =>
-                        updateFilter('priceRange', [
-                          Number(e.target.value),
-                          filters.priceRange[1],
-                        ])
-                      }
-                      className="w-full px-2 py-1 rounded bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 mt-1"
-                    />
+                    <label className="text-xs text-slate-500">Min</label>
+                    <input type="number" value={filters.priceRange[0]} onChange={(e) => updateFilter('priceRange', [Number(e.target.value), filters.priceRange[1]])} className="w-full px-2 py-1 rounded bg-gray-50 border border-gray-200 text-slate-900 text-sm focus:outline-none focus:border-purple-400 mt-1" />
                   </div>
                   <div className="flex-1">
-                    <label className="text-xs text-gray-400">Max</label>
-                    <input
-                      type="number"
-                      value={filters.priceRange[1]}
-                      onChange={(e) =>
-                        updateFilter('priceRange', [
-                          filters.priceRange[0],
-                          Number(e.target.value),
-                        ])
-                      }
-                      className="w-full px-2 py-1 rounded bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 mt-1"
-                    />
+                    <label className="text-xs text-slate-500">Max</label>
+                    <input type="number" value={filters.priceRange[1]} onChange={(e) => updateFilter('priceRange', [filters.priceRange[0], Number(e.target.value)])} className="w-full px-2 py-1 rounded bg-gray-50 border border-gray-200 text-slate-900 text-sm focus:outline-none focus:border-purple-400 mt-1" />
                   </div>
                 </div>
               </div>
-
-              {/* Min Rating */}
               <div>
-                <h4 className="text-sm font-semibold text-white mb-3">Min Rating</h4>
+                <h4 className="text-sm font-semibold text-slate-900 mb-3">Min Rating</h4>
                 <div className="flex gap-2">
                   {[1, 2, 3, 4, 5].map((stars) => (
-                    <motion.button
-                      key={stars}
-                      onClick={() => updateFilter('minRating', stars)}
-                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                        filters.minRating === stars
-                          ? 'bg-yellow-500/30 border border-yellow-500/50'
-                          : 'bg-white/5 border border-white/10 hover:bg-white/10'
-                      }`}
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      {stars}
-                      <Star size={14} className="inline ml-1" fill="currentColor" />
+                    <motion.button key={stars} onClick={() => updateFilter('minRating', stars)} className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${ filters.minRating === stars ? 'bg-yellow-100 border border-yellow-400 text-yellow-700' : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200' }`} whileHover={{ scale: 1.05 }}>
+                      {stars}<Star size={14} className="inline ml-1" fill="currentColor" />
                     </motion.button>
                   ))}
                 </div>
               </div>
-
-              {/* VRAM Slider */}
               <div>
-                <h4 className="text-sm font-semibold text-white mb-3">
-                  Min VRAM: {filters.vramMin}GB
-                </h4>
-                <input
-                  type="range"
-                  min="0"
-                  max="80"
-                  value={filters.vramMin}
-                  onChange={(e) => updateFilter('vramMin', Number(e.target.value))}
-                  className="w-full cursor-pointer accent-cyan-500"
-                />
+                <h4 className="text-sm font-semibold text-slate-900 mb-3">Min VRAM: {filters.vramMin}GB</h4>
+                <input type="range" min="0" max="80" value={filters.vramMin} onChange={(e) => updateFilter('vramMin', Number(e.target.value))} className="w-full cursor-pointer accent-cyan-500" />
               </div>
-
-              {/* Frameworks */}
               <div>
-                <h4 className="text-sm font-semibold text-white mb-3">Frameworks</h4>
+                <h4 className="text-sm font-semibold text-slate-900 mb-3">Frameworks</h4>
                 <div className="grid grid-cols-2 gap-2">
                   {frameworks.map((fw) => (
-                    <motion.button
-                      key={fw}
-                      onClick={() => toggleFramework(fw)}
-                      className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                        filters.frameworks.includes(fw)
-                          ? 'bg-green-500/30 border border-green-500/50 text-green-200'
-                          : 'bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10'
-                      }`}
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      {fw}
-                    </motion.button>
+                    <motion.button key={fw} onClick={() => toggleFramework(fw)} className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${ filters.frameworks.includes(fw) ? 'bg-green-100 border border-green-400 text-green-700' : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200' }`} whileHover={{ scale: 1.05 }}>{fw}</motion.button>
                   ))}
                 </div>
               </div>
-
-              {/* Max Distance */}
               <div>
-                <h4 className="text-sm font-semibold text-white mb-3">
-                  Max Distance: {filters.maxDistance} mi
-                </h4>
-                <input
-                  type="range"
-                  min="0"
-                  max="500"
-                  value={filters.maxDistance}
-                  onChange={(e) => updateFilter('maxDistance', Number(e.target.value))}
-                  className="w-full cursor-pointer accent-cyan-500"
-                />
+                <h4 className="text-sm font-semibold text-slate-900 mb-3">Max Distance: {filters.maxDistance} mi</h4>
+                <input type="range" min="0" max="500" value={filters.maxDistance} onChange={(e) => updateFilter('maxDistance', Number(e.target.value))} className="w-full cursor-pointer accent-cyan-500" />
               </div>
-
-              {/* Results count */}
-              <div className="pt-4 border-t border-white/10 text-sm text-gray-300">
-                Showing {listingCount} listings
-              </div>
+              <div className="pt-4 border-t border-gray-200 text-sm text-slate-600">Showing {listingCount} listings</div>
             </div>
           </motion.div>
         )}
