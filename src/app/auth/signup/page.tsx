@@ -52,6 +52,7 @@ export default function SignUpPage() {
     }
     setSuccess(true);
     setSubmitting(false);
+    router.push("/profile/setup");
   };
 
   const handleGoogle = async () => {
