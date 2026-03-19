@@ -152,12 +152,12 @@ export default function AINewsSidebar() {
             </button>
           </div>
         )}
-        {!loading && !error && filteredArticles.length === 0 && (
+        {!loading && !error && (filteredArticles ?? []).length === 0 && (
           <div className="p-4 text-center">
             <p className="text-xs text-gray-400">No articles in this category</p>
           </div>
         )}
-        {!loading && filteredArticles.map((article, idx) => (
+        {!loading && (filteredArticles ?? []).map((article, idx) => (
           <a
             key={article.objectID}
             href={article.url || `https://news.ycombinator.com/item?id=${article.objectID}`}
