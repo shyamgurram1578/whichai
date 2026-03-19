@@ -1,19 +1,13 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Bell, ChevronDown, LogOut, User, Store } from "lucide-react";
+import { Menu, X, Bell, ChevronDown, LogOut, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { signOut } from "@/lib/auth";
-
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/compare", label: "Compare" },
-  { href: "/dashboard", label: "Dashboard" },
-];
 
 const mockNotifications = [
   { id: 1, text: "🔥 New deal: OpenAI credits 10% off!", time: "2m ago" },
@@ -22,7 +16,6 @@ const mockNotifications = [
 ];
 
 export default function Navbar() {
-  const pathname = usePathname();
   const router = useRouter();
   const { user, profile, loading } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -31,7 +24,6 @@ export default function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdowns on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -57,60 +49,22 @@ export default function Navbar() {
     : "U";
 
   return (
-    <nav className="relative z-50 flex items-center justify-between px-6 md:px-12 py-5 border-b border-gray-100">
+    <nav className="relative z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-gray-100">
+      {/* Logo */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/whichai_icon_nav.svg" alt="whichai logo" width={32} height={29} priority />
+          <Image src="/whichai_icon_nav.svg" alt="WhichAi logo" width={32} height={29} priority />
           <span className="text-xl font-bold bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
             WhichAi
           </span>
         </Link>
       </motion.div>
 
-      {/* Desktop links */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="hidden md:flex items-center gap-1"
-      >
-        {navLinks.map((link) => {
-          const isActive = pathname === link.href;
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                isActive
-                  ? "text-slate-900 bg-slate-100"
-                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
-              }`}
-            >
-              {link.label}
-            </Link>
-          );
-        })}
-
-        {/* Marketplace link with neon-pulse */}
-        <Link
-          href="/marketplace"
-          className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 ${
-            pathname === "/marketplace"
-              ? "text-purple-700 bg-purple-50"
-              : "text-purple-600 hover:text-purple-800 hover:bg-purple-50"
-          }`}
-        >
-          <Store className="w-4 h-4" />
-          Marketplace
-          <span className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 opacity-0 animate-neon-pulse -z-10" />
-        </Link>
-      </motion.div>
-
-      {/* Right side */}
+      {/* Right side auth */}
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -128,7 +82,6 @@ export default function Navbar() {
                 <Bell className="w-5 h-5" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-pink-500 rounded-full" />
               </button>
-
               <AnimatePresence>
                 {notifOpen && (
                   <motion.div
@@ -142,10 +95,7 @@ export default function Navbar() {
                     </div>
                     <div className="max-h-64 overflow-y-auto">
                       {mockNotifications.map((n) => (
-                        <div
-                          key={n.id}
-                          className="px-4 py-3 hover:bg-slate-50 transition-colors border-b border-gray-50 last:border-0"
-                        >
+                        <div key={n.id} className="px-4 py-3 hover:bg-slate-50 transition-colors border-b border-gray-50 last:border-0">
                           <p className="text-sm text-slate-700">{n.text}</p>
                           <p className="text-xs text-slate-400 mt-1">{n.time}</p>
                         </div>
@@ -170,7 +120,6 @@ export default function Navbar() {
                 </span>
                 <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
               </button>
-
               <AnimatePresence>
                 {dropdownOpen && (
                   <motion.div
@@ -189,7 +138,7 @@ export default function Navbar() {
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors"
                       >
-                        <User className="w-4 h-4" />
+                        <User className="v-4 h-4" />
                         Dashboard
                       </Link>
                       <button
@@ -228,7 +177,7 @@ export default function Navbar() {
         onClick={() => setMobileOpen(!mobileOpen)}
         className="md:hidden p-2 text-slate-500 hover:text-slate-900 transition-colors"
       >
-        {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        {mobileOpen ? <X className="v-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
       {/* Mobile menu */}
@@ -238,44 +187,16 @@ export default function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           className="absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-lg md:hidden"
         >
-          <div className="flex flex-col p-4 gap-1">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                    isActive
-                      ? "text-slate-900 bg-slate-100"
-                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-            <Link
-              href="/marketplace"
-              onClick={() => setMobileOpen(false)}
-              className="px-4 py-3 rounded-lg text-sm font-semibold text-purple-600 hover:bg-purple-50 flex items-center gap-2"
-            >
-              <Store className="w-4 h-4" />
-              Marketplace
-            </Link>
+          <div className="flex flex-col p-4 gap-2">
             {user ? (
               <button
-                onClick={() => {
-                  handleSignOut();
-                  setMobileOpen(false);
-                }}
-                className="mt-2 px-4 py-3 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 text-left"
+                onClick={() => { handleSignOut(); setMobileOpen(false); }}
+                className="px-4 py-3 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 text-left"
               >
                 Sign out
               </button>
             ) : (
-              <div className="mt-2 flex flex-col gap-2">
+              <>
                 <Link
                   href="/auth/login"
                   onClick={() => setMobileOpen(false)}
@@ -286,11 +207,11 @@ export default function Navbar() {
                 <Link
                   href="/auth/signup"
                   onClick={() => setMobileOpen(false)}
-                  className="px-4 py-3 rounded-lg text-sm font-semibold text-center text-white bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500"
+                  className="px-4 py-3 rounded-lg text-sm font-semibold text-center text-white bg-gradient-to-r  from-cyan-500 via-purple-500 to-pink-500"
                 >
                   Sign Up
                 </Link>
-              </div>
+              </>
             )}
           </div>
         </motion.div>

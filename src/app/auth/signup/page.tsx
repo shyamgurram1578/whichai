@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, ArrowLeft, User, Mail, Phone, Lock, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, Lock, Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, FormEvent } from "react";
@@ -140,9 +141,12 @@ export default function SignUpPage() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-                  className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-100 to-purple-100 mb-4"
+                  className="flex items-center justify-center gap-2.5 mb-5"
                 >
-                  <Sparkles className="w-7 h-7 text-purple-500" />
+                  <Image src="/whichai_icon_nav.svg" alt="WhichAi logo" width={40} height={36} priority />
+                  <span className="text-2xl font-black bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-tight">
+                    WhichAi
+                  </span>
                 </motion.div>
                 <h1 className="text-2xl font-bold text-slate-900">
                   Join WhichAi.cloud
