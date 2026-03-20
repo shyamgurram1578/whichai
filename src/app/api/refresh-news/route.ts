@@ -11,16 +11,15 @@ const RSS_FEEDS = [
   { url: 'https://venturebeat.com/category/ai/feed/', source: 'VentureBeat' },
 ];
 
-// ── Minimal RSS/Atom parser (no external deps) ───────────────────────────────────────────
-
+// ---- Minimal RSS/Atom parser (no external deps) ----
 function extractTag(xml: string, tag: string): string | null {
-  const regex = new RegExp(`<${tag}[^>]*>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?</${tag}>`, 'i');
+  const regex = new RegExp(`<${tag}[^>]*>(?:<!\[CDATA\[)?([\\s\\S]*?)(?:\\]\]>)?<\/${tag}>`, 'i');
   const match = xml.match(regex);
   return match ? match[1].trim() : null;
 }
 
 function extractAtomHref(block: string): string | null {
-  const match = block.match(/<link[^>]+href=["']([^"']+)["'][^>]*\/?>\s*/i);
+  const match = block.match(/<link[^>]+href=["']([^"']+)["'][^>]*\/?>(?:\s*<\/link>)?/i);
   return match ? match[1] : null;
 }
 
@@ -31,48 +30,98 @@ function decodeEntities(text: string): string {
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)));
+    .replace(/&#(\\d+);/g, (_, n) => String.fromCharCode(Number(n)));
+}
+
+function stripTags(html: string): string {
+  return html.replace(/<[^>]+>/g, '').trim();
+}
+
+function firstImageUrlFromHtml(html: string): string | null {
+  const match = html.match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
+  return match ? match[1] : null;
+}
+
+function firstEnclosureOrMediaUrl(block: string): string | null {
+  const media = block.match(/<media:content[^>]+url=["']([^"']+)["'][^>]*>/i);
+  if (media?.[1]) return media[1];
+
+  const enclosure = block.match(/<enclosure[^>]+url=["']([^"']+)["'][^>]*type=["']image\//i);
+  if (enclosure?.[1]) return enclosure[1];
+
+  return null;
 }
 
 interface RawItem {
   title: string;
   url: string;
   publishedAt: Date;
+  summary?: string;
+  imageUrl?: string | null;
 }
 
 function parseItems(xml: string): RawItem[] {
   const items: RawItem[] = [];
-  const blockRegex = /<(?:item|entry)[\s>]([\s\S]*?)<\/(?:item|entry)>/gi;
+  const blockRegex = /<(?:item|entry)[\\s>](.*?)<\/(?:item|entry)>/gis;
   let match: RegExpExecArray | null;
 
   while ((match = blockRegex.exec(xml)) !== null) {
-    const block = match[1];
+    const rawBlock = match[1];
+    const block = decodeEntities(rawBlock);
+
     const rawTitle = extractTag(block, 'title') || '';
-    const rawLink =
-      extractAtomHref(block) ||
-      extractTag(block, 'link') ||
-      '';
-    const rawDate =
-      extractTag(block, 'pubDate') ||
-      extractTag(block, 'published') ||
-      extractTag(block, 'updated') ||
+    const rawLink = extractAtomHref(block) || extractTag(block, 'link') || '';
+    const rawDate = extractTag(block, 'pubDate') || extractTag(block, 'published') || extractTag(block, 'updated') || '';
+
+    const rawDescription =
+      extractTag(block, 'description') ||
+      extractTag(block, 'content:encoded') ||
+      extractTag(block, 'content') ||
       '';
 
-    const title = decodeEntities(rawTitle).replace(/<[^>]+>/g, '').trim();
-    const url = decodeEntities(rawLink).trim();
+    const title = stripTags(rawTitle);
+    const url = rawLink.trim();
     const publishedAt = rawDate ? new Date(rawDate) : new Date();
 
+    const descriptionHtml = decodeEntities(rawDescription);
+    const descriptionText = stripTags(descriptionHtml);
+    const summary = descriptionText ? descriptionText.slice(0, 220) : undefined;
+
+    const imageFromHtml = firstImageUrlFromHtml(descriptionHtml);
+    const imageFromBlock = firstEnclosureOrMediaUrl(block);
+    const imageUrl = imageFromHtml || imageFromBlock || null;
+
     if (title && url) {
-      items.push({ title, url, publishedAt });
+      items.push({ title, url, publishedAt, summary, imageUrl });
     }
   }
 
   return items;
 }
 
-// ── Shared refresh logic ───────────────────────────────────────────────────────────────
+function isAuthorized(request: Request): boolean {
+  const authHeader = request.headers.get('authorization');
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return true;
+  return authHeader === `Bearer ${secret}`;
+}
+
+// "exactly" at 8pm local TX time (Chicago timezone). We'll schedule the cron twice a day
+// (1-2 UTC) and only execute when the local hour is 20.
+function shouldRunAt8pmChicago(date = new Date()): boolean {
+  const hourStr = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Chicago',
+    hour: '2-digit',
+    hour12: false,
+  }).format(date);
+  return Number(hourStr) === 20;
+}
 
 async function runRefresh() {
+  if (!shouldRunAt8pmChicago()) {
+    return { skipped: true as const };
+  }
+
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   let totalInserted = 0;
@@ -92,15 +141,14 @@ async function runRefresh() {
 
       const xml = await res.text();
       const items = parseItems(xml);
-
       if (items.length === 0) continue;
 
       const rows = items.map((item) => ({
         title: item.title.slice(0, 500),
         url: item.url,
         source: feed.source,
-        summary: '',
-        image_url: null,
+        summary: item.summary ?? '',
+        image_url: item.imageUrl ?? null,
         published_at: item.publishedAt.toISOString(),
       }));
 
@@ -109,56 +157,42 @@ async function runRefresh() {
         .upsert(rows, { onConflict: 'url', ignoreDuplicates: true })
         .select('id');
 
-      if (error) {
-        errors.push(`${feed.source}: ${error.message}`);
-      } else {
-        totalInserted += data?.length ?? 0;
-      }
+      if (error) errors.push(`${feed.source}: ${error.message}`);
+      else totalInserted += data?.length ?? 0;
     } catch (err) {
       errors.push(`${feed.source}: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
 
-  return { totalInserted, errors };
+  return { skipped: false as const, totalInserted, errors };
 }
 
-function isAuthorized(request: Request): boolean {
-  const authHeader = request.headers.get('authorization');
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return true;
-  return authHeader === `Bearer ${secret}`;
-}
-
-// ── Route handlers ────────────────────────────────────────────────────────────────────────
-
-// GET: called by Vercel Cron daily at midnight UTC (vercel.json)
 export async function GET(request: Request) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { totalInserted, errors } = await runRefresh();
+  const { skipped, totalInserted, errors } = await runRefresh();
 
   return NextResponse.json({
     success: true,
-    inserted: totalInserted,
-    errors: errors.length > 0 ? errors : undefined,
-    next_refresh: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    skipped,
+    inserted: skipped ? 0 : totalInserted,
+    errors: !skipped && errors?.length ? errors : undefined,
   });
 }
 
-// POST: manual trigger
 export async function POST(request: Request) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { totalInserted, errors } = await runRefresh();
+  const { skipped, totalInserted, errors } = await runRefresh();
 
   return NextResponse.json({
     success: true,
-    inserted: totalInserted,
-    errors: errors.length > 0 ? errors : undefined,
-    next_refresh: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    skipped,
+    inserted: skipped ? 0 : totalInserted,
+    errors: !skipped && errors?.length ? errors : undefined,
   });
 }
