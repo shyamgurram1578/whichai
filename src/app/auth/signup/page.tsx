@@ -49,7 +49,7 @@ export default function SignUpPage() {
       setSubmitting(false);
       return;
     }
-    // Show success — user must confirm email before signing in
+    // Show success â user must confirm email before signing in
     setSuccess(true);
     setSubmitting(false);
   };
@@ -58,7 +58,7 @@ export default function SignUpPage() {
     "w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-gray-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-100 transition-all";
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 bg-gray-50">
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 bg-[#f4f0eb]">
       {/* Background accents */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-32 w-80 h-80 bg-cyan-100/50 rounded-full blur-[100px]" />
