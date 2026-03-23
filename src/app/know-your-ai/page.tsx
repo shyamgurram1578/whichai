@@ -27,15 +27,15 @@ const features = [
   {
     icon: Zap,
     title: "Use-Case Matcher",
-    desc: "Tell us what you need to do — we'll recommend the best AI for the job.",
+    desc: "Tell us what you need to do â we'll recommend the best AI for the job.",
     color: "bg-violet-100 text-violet-600",
   },
 ];
 
 export default function KnowYourAIPage() {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-40">
+    <div className="min-h-screen bg-[#f4f0eb]">
+      <div className="bg-[#f4f0eb] border-b border-gray-100 sticky top-0 z-40">
         <Navbar />
       </div>
 
@@ -77,7 +77,7 @@ export default function KnowYourAIPage() {
           </h1>
           <p className="text-slate-500 text-lg max-w-2xl leading-relaxed">
             Explore, benchmark, and compare AI models so you always pick the right tool for
-            the job. No more guessing — make data-driven decisions.
+            the job. No more guessing â make data-driven decisions.
           </p>
         </motion.div>
 
@@ -112,7 +112,7 @@ export default function KnowYourAIPage() {
           transition={{ delay: 0.5 }}
           className="rounded-3xl border-2 border-dashed border-cyan-200 bg-cyan-50 p-10 text-center"
         >
-          <div className="text-4xl mb-4">🚀</div>
+          <div className="text-4xl mb-4">ð</div>
           <h2 className="text-xl font-black text-slate-900 mb-2">Coming Soon</h2>
           <p className="text-slate-500 text-sm max-w-sm mx-auto leading-relaxed">
             The full AI explorer and comparison engine is in development. Check back soon!
