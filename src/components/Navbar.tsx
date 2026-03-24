@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Bell, ChevronDown, LogOut, User } from "lucide-react";
+import { Menu, X, Bell, ChevronDown, LogOut, User, LayoutGrid } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -10,9 +10,9 @@ import { useAuth } from "@/components/AuthProvider";
 import { signOut } from "@/lib/auth";
 
 const mockNotifications = [
-  { id: 1, text: "🔥 New deal: OpenAI credits 10% off!", time: "2m ago" },
-  { id: 2, text: "🎓 Student pricing now available for Claude Pro", time: "1h ago" },
-  { id: 3, text: "⚡ GPU flash sale: H100 instances at $2.49/hr", time: "3h ago" },
+  { id: 1, text: "ð¥ New deal: OpenAI credits 10% off!", time: "2m ago" },
+  { id: 2, text: "ð Student pricing now available for Claude Pro", time: "1h ago" },
+  { id: 3, text: "â¡ GPU flash sale: H100 instances at $2.49/hr", time: "3h ago" },
 ];
 
 export default function Navbar() {
@@ -45,7 +45,7 @@ export default function Navbar() {
       setMobileOpen(false);
       await signOut();
     } catch {
-      // Ignore errors — still redirect
+      // Ignore errors â still redirect
     } finally {
       // Force a full page reload so all client state (auth, cache) is cleared
       window.location.href = "/";
@@ -82,6 +82,19 @@ export default function Navbar() {
       >
         {user ? (
           <>
+            {/* Hub button */}
+            <Link
+              href="/hub"
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                pathname === "/hub"
+                  ? "bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white shadow-md"
+                  : "text-slate-700 border border-slate-200 bg-white hover:border-purple-300 hover:text-purple-600"
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              Hub
+            </Link>
+
             {/* Notification bell */}
             <div ref={notifRef} className="relative">
               <button
@@ -198,13 +211,27 @@ export default function Navbar() {
         >
           <div className="flex flex-col p-4 gap-2">
             {user ? (
-              <button
-                onClick={handleSignOut}
-                className="px-4 py-3 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 text-left flex items-center gap-2"
-              >
-                <LogOut className="w-4 h-4" />
-                Sign out
-              </button>
+              <>
+                <Link
+                  href="/hub"
+                  onClick={() => setMobileOpen(false)}
+                  className={`px-4 py-3 rounded-lg text-sm font-semibold text-center flex items-center gap-2 justify-center ${
+                    pathname === "/hub"
+                      ? "bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white"
+                      : "text-slate-700 border border-gray-200"
+                  }`}
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                  Hub
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="px-4 py-3 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 text-left flex items-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign out
+                </button>
+              </>
             ) : (
               <>
                 <Link
