@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Bell, ChevronDown, LogOut, User, LayoutDashboard } from "lucide-react";
+import { Menu, X, Bell, ChevronDown, LogOut, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -80,21 +80,6 @@ export default function Navbar() {
         transition={{ duration: 0.5 }}
         className="hidden md:flex items-center gap-3"
       >
-        {/* Dashboard button — shown on all pages except homepage */}
-        {!isHomepage && (
-          <Link
-            href="/hub"
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-              pathname === "/hub"
-                ? "bg-violet-600 text-white shadow-md shadow-violet-200"
-                : "bg-violet-50 border border-violet-200 text-violet-700 hover:bg-violet-100 hover:border-violet-300"
-            }`}
-          >
-            <LayoutDashboard className="w-3.5 h-3.5" />
-            Dashboard
-          </Link>
-        )}
-
         {!loading && user ? (
           <>
             {/* Notification bell */}
@@ -163,7 +148,7 @@ export default function Navbar() {
                         className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors"
                       >
                         <User className="w-4 h-4" />
-                        Dashboard
+                        Profile Settings
                       </Link>
                       <button
                         onClick={handleSignOut}
@@ -212,17 +197,6 @@ export default function Navbar() {
           className="absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-lg md:hidden"
         >
           <div className="flex flex-col p-4 gap-2">
-            {/* Dashboard link — visible on mobile on all non-homepage pages */}
-            {!isHomepage && (
-              <Link
-                href="/hub"
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold text-violet-700 bg-violet-50 border border-violet-200"
-              >
-                <LayoutDashboard className="w-4 h-4" />
-                Dashboard — All Sections
-              </Link>
-            )}
             {user ? (
               <button
                 onClick={handleSignOut}
