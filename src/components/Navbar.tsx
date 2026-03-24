@@ -92,6 +92,35 @@ export default function Navbar() {
               }`}
             >
               <LayoutGrid className="w-4 h-4" />
+              transition={{ duration: 0.5 }}
+      >
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/whichai_icon_nav.svg" alt="WhichAi logo" width={32} height={29} priority />
+          <span className="text-xl font-bold bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            WhichAi
+          </span>
+        </Link>
+      </motion.div>
+
+      {/* Right side auth */}
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        className="hidden md:flex items-center gap-3"
+      >
+        {user ? (
+          <>
+            {/* Hub button */}
+            <Link
+              href="/hub"
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                pathname === "/hub"
+                  ? "bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white shadow-md"
+                  : "text-slate-700 border border-slate-200 bg-white hover:border-purple-300 hover:text-purple-600"
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
               Hub
             </Link>
 
@@ -156,12 +185,12 @@ export default function Navbar() {
                     </div>
                     <div className="p-1.5">
                       <Link
-                        href="/dashboard"
+                        href="/profile"
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors"
                       >
                         <User className="w-4 h-4" />
-                        Profile Settings
+                        Profile
                       </Link>
                       <button
                         onClick={handleSignOut}
