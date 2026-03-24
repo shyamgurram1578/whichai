@@ -255,7 +255,7 @@ export const marketplaceDeals: MarketplaceDeal[] = [
   // LLM Subscriptions
   {
     id: 'deal-5',
-    name: 'ChatGPT Pro — Student Deal',
+    name: 'ChatGPT Pro â Student Deal',
     description: 'Full ChatGPT Pro access with GPT-5, code interpreter, DALL-E, and advanced voice. Verified .edu required.',
     category: 'llm-subscriptions',
     original_price: 200,
@@ -268,7 +268,7 @@ export const marketplaceDeals: MarketplaceDeal[] = [
   },
   {
     id: 'deal-6',
-    name: 'Claude Pro — Student Plan',
+    name: 'Claude Pro â Student Plan',
     description: 'Unlimited Claude 4.6 Opus access with 5x usage limits. Available to verified students.',
     category: 'llm-subscriptions',
     original_price: 20,
@@ -281,7 +281,7 @@ export const marketplaceDeals: MarketplaceDeal[] = [
   },
   {
     id: 'deal-7',
-    name: 'Gemini Advanced — Annual',
+    name: 'Gemini Advanced â Annual',
     description: 'Gemini 2.5 Ultra with 2M context, Gems, and Google ecosystem integration. Save with annual billing.',
     category: 'llm-subscriptions',
     original_price: 240,
@@ -294,7 +294,7 @@ export const marketplaceDeals: MarketplaceDeal[] = [
   },
   {
     id: 'deal-8',
-    name: 'Team Bulk Seats — ChatGPT',
+    name: 'Team Bulk Seats â ChatGPT',
     description: '10-seat team bundle for ChatGPT Team with shared workspace, admin console, and priority support.',
     category: 'llm-subscriptions',
     original_price: 300,
@@ -348,7 +348,7 @@ export const marketplaceDeals: MarketplaceDeal[] = [
   },
   {
     id: 'deal-12',
-    name: 'RTX 4090 Cluster — 4x GPUs',
+    name: 'RTX 4090 Cluster â 4x GPUs',
     description: '4x RTX 4090 with NVLink, 512GB RAM, 2TB NVMe. Perfect for inference and small-scale training.',
     category: 'gpu-deals',
     original_price: 2.40,
@@ -379,7 +379,7 @@ export const categories = [
 ] as const;
 
 // ============================================================
-// Full AI Marketplace — v2 Listings
+// Full AI Marketplace â v2 Listings
 // ============================================================
 
 export type BigCategory = 'digital-assets' | 'compute-hub' | 'hardware-corner';
@@ -406,10 +406,17 @@ export interface MarketplaceListing {
   featured: boolean;
   tags: string[];
   emoji: string;
+  // V3 extended fields
+  images?: string[];
+  location?: { lat: number; lng: number; city?: string };
+  distance?: number;
+  techSpecs?: TechSpecs;
+  trendingScore?: number;
+  codeSnippet?: string;
 }
 
 export const allListings: MarketplaceListing[] = [
-  // ── Digital Assets
+  // ââ Digital Assets ââââââââââââââââââââââââââââââââââââââââââ
   {
     id: 'listing-1',
     name: 'Ultimate ChatGPT Prompt Bundle',
@@ -428,7 +435,7 @@ export const allListings: MarketplaceListing[] = [
   {
     id: 'listing-2',
     name: 'Legal Assistant GPT Agent',
-    description: 'Specialized AI agent trained on US contract law. Drafts NDAs, reviews clauses, explains legal jargon.',
+    description: 'Specialized AI agent trained on US contract law. Drafts NDAs, reviews clauses, explains legal jargon. Not a substitute for a lawyer.',
     bigCategory: 'digital-assets',
     subcategory: 'custom-agent',
     price: 49,
@@ -441,8 +448,8 @@ export const allListings: MarketplaceListing[] = [
   },
   {
     id: 'listing-3',
-    name: 'Anime LoRA — Studio Ghibli Style',
-    description: 'Fine-tuned LoRA for SDXL that generates beautiful Ghibli-inspired scenes.',
+    name: 'Anime LoRA â Studio Ghibli Style',
+    description: 'Fine-tuned LoRA for SDXL that generates beautiful Ghibli-inspired scenes. Works with ComfyUI and A1111. Includes 20 trigger words.',
     bigCategory: 'digital-assets',
     subcategory: 'fine-tuned-model',
     price: 15,
@@ -456,7 +463,7 @@ export const allListings: MarketplaceListing[] = [
   {
     id: 'listing-4',
     name: 'Medical Transcription Fine-tune',
-    description: 'Whisper v3 fine-tuned on 50K medical recordings. 97% accuracy on clinical terminology.',
+    description: 'Whisper v3 fine-tuned on 50K medical recordings. Achieves 97% accuracy on clinical terminology. HIPAA-aware prompt structure included.',
     bigCategory: 'digital-assets',
     subcategory: 'fine-tuned-model',
     price: 89,
@@ -470,7 +477,7 @@ export const allListings: MarketplaceListing[] = [
   {
     id: 'listing-5',
     name: 'E-commerce Product Desc AI',
-    description: 'Claude-based agent that writes SEO-optimized product descriptions from a photo + bullets.',
+    description: 'Claude-based agent that writes SEO-optimized product descriptions from a photo + bullets. Integrates with Shopify & WooCommerce.',
     bigCategory: 'digital-assets',
     subcategory: 'custom-agent',
     price: 24,
@@ -483,8 +490,8 @@ export const allListings: MarketplaceListing[] = [
   },
   {
     id: 'listing-6',
-    name: 'NRI Tax Bot — Indian Expats (US)',
-    description: 'AI assistant specialized in DTAA, FEMA compliance, and NRI investment rules.',
+    name: 'NRI Tax Bot â Indian Expats (US)',
+    description: 'AI assistant specialized in DTAA, FEMA compliance, and NRI investment rules. Answers tax questions for Indians in the US.',
     bigCategory: 'digital-assets',
     subcategory: 'custom-agent',
     price: 39,
@@ -495,11 +502,11 @@ export const allListings: MarketplaceListing[] = [
     tags: ['tax', 'NRI', 'India', 'agent'],
     emoji: '',
   },
-  // ── Compute Hub
+  // ââ Compute Hub ââââââââââââââââââââââââââââââââââââââââââââââ
   {
     id: 'listing-7',
-    name: 'RTX 4090 — On-Demand Rental',
-    description: 'Idle RTX 4090 24GB for rent. ~180 TFLOPS FP16. Available 9am–9pm PST.',
+    name: 'RTX 4090 â On-Demand Rental',
+    description: 'Idle RTX 4090 24GB for rent. ~180 TFLOPS FP16. Great for inference, image gen, and LoRA training. Available 9amâ9pm PST.',
     bigCategory: 'compute-hub',
     subcategory: 'p2p-gpu',
     price: 4.20,
@@ -513,8 +520,8 @@ export const allListings: MarketplaceListing[] = [
   },
   {
     id: 'listing-8',
-    name: 'OpenAI API Credits — $100 Bundle',
-    description: 'Excess OpenAI API credits from a startup plan. Valid for GPT-4o, o3, DALL-E 3, and Whisper.',
+    name: 'OpenAI API Credits â $100 Bundle',
+    description: 'Excess OpenAI API credits from a startup plan. Valid for GPT-4o, o3, DALL-E 3, and Whisper. Transfer via org invite.',
     bigCategory: 'compute-hub',
     subcategory: 'api-tokens',
     price: 88,
@@ -528,8 +535,8 @@ export const allListings: MarketplaceListing[] = [
   },
   {
     id: 'listing-9',
-    name: 'Claude Pro — Student Seat',
-    description: 'Verified student discount for Claude Pro. 5x usage, Claude Opus access.',
+    name: 'Claude Pro â Student Seat',
+    description: 'Verified student discount for Claude Pro. 5x usage, Claude Opus access. Requires .edu email verification through our portal.',
     bigCategory: 'compute-hub',
     subcategory: 'subscription',
     price: 10,
@@ -543,8 +550,8 @@ export const allListings: MarketplaceListing[] = [
   },
   {
     id: 'listing-10',
-    name: 'A100 40GB — Spot Instance',
-    description: 'NVIDIA A100 PCIe 40GB spot instance. Ideal for fine-tuning 7B–70B models.',
+    name: 'A100 40GB â Spot Instance',
+    description: 'NVIDIA A100 PCIe 40GB spot instance. Ideal for fine-tuning 7Bâ70B models. SSH or Jupyter access included.',
     bigCategory: 'compute-hub',
     subcategory: 'cloud-gpu',
     price: 1.29,
@@ -558,8 +565,8 @@ export const allListings: MarketplaceListing[] = [
   },
   {
     id: 'listing-11',
-    name: 'Gemini Advanced — Group Buy',
-    description: 'Shared-seat access to Gemini 2.5 Ultra. 2M context window, Google ecosystem.',
+    name: 'Gemini Advanced â Group Buy',
+    description: 'Shared-seat access to Gemini 2.5 Ultra. 2M context window, Google ecosystem, Gems feature. Pay monthly.',
     bigCategory: 'compute-hub',
     subcategory: 'subscription',
     price: 12.50,
@@ -571,11 +578,11 @@ export const allListings: MarketplaceListing[] = [
     tags: ['Gemini', 'Google', 'subscription', 'group-buy'],
     emoji: '',
   },
-  // ── Hardware Corner
+  // ââ Hardware Corner ââââââââââââââââââââââââââââââââââââââââââ
   {
     id: 'listing-12',
-    name: 'RTX 4090 24GB — Like New',
-    description: 'ASUS ROG STRIX RTX 4090 OC. Used 3 months, light gaming only. No mining.',
+    name: 'RTX 4090 24GB â Like New',
+    description: 'ASUS ROG STRIX RTX 4090 OC. Used 3 months, light gaming only. No mining. Original box, cables, GPU sag bracket. Ships insured.',
     bigCategory: 'hardware-corner',
     subcategory: 'used-gpu',
     price: 1299,
@@ -590,7 +597,7 @@ export const allListings: MarketplaceListing[] = [
   {
     id: 'listing-13',
     name: 'NVIDIA Jetson Orin Nano Kit',
-    description: 'Jetson Orin Nano 8GB dev kit — 40 TOPS AI. Includes fan, SD card with JetPack 6.',
+    description: 'Jetson Orin Nano 8GB dev kit â 40 TOPS AI. Includes fan, SD card with JetPack 6, camera module, and carry case.',
     bigCategory: 'hardware-corner',
     subcategory: 'ai-kit',
     price: 249,
@@ -603,7 +610,7 @@ export const allListings: MarketplaceListing[] = [
   },
   {
     id: 'listing-14',
-    name: 'MacBook Pro M3 Max — AI Ready',
+    name: 'MacBook Pro M3 Max â AI Ready',
     description: '16" MacBook Pro M3 Max, 48GB RAM, 1TB SSD. Pre-loaded with Ollama, LM Studio, and local LLM setup guide.',
     bigCategory: 'hardware-corner',
     subcategory: 'ai-laptop',
@@ -641,148 +648,37 @@ export function getFeaturedListings(): MarketplaceListing[] {
   return allListings.filter((l) => l.featured);
 }
 
-// ============================================================
-// Extended marketplace types (v3)
-// ============================================================
+// ââ V3 aliases & helpers (used by marketplace V3 components) ââ
 
 export interface TechSpecs {
   gpuType?: string;
   vram?: number;
-  flops?: number;
   framework?: string[];
   tokenCount?: number;
   condition?: string;
 }
 
-export interface GeoLocation {
-  city: string;
-  lat: number;
-  lng: number;
-}
+export type MarketListingV3 = MarketplaceListing;
 
-export interface MarketListingV3 extends MarketplaceListing {
-  images?: string[];
-  techSpecs?: TechSpecs;
-  codeSnippet?: string;
-  location?: GeoLocation;
-  distance?: number;
-  trendingScore?: number;
-}
+export const allListingsV3: MarketplaceListing[] = allListings;
 
-export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 3959; // miles
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+/**
+ * Haversine distance in kilometres between two lat/lng pairs.
+ */
+export function calculateDistance(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
-
-export const allListingsV3: MarketListingV3[] = [
-  {
-    ...allListings[0],
-    images: ['https://picsum.photos/seed/p1a/400/240','https://picsum.photos/seed/p1b/400/240','https://picsum.photos/seed/p1c/400/240'],
-    techSpecs: { tokenCount: 500, framework: ['ChatGPT','Claude'] },
-    codeSnippet: `// Use with OpenAI\nconst response = await openai.chat.completions.create({\n  model: 'gpt-4o',\n  messages: [{ role: 'system', content: prompt }]\n});`,
-    location: { city: 'San Francisco', lat: 37.77, lng: -122.41 },
-  },
-  {
-    ...allListings[1],
-    images: ['https://picsum.photos/seed/p2a/400/240','https://picsum.photos/seed/p2b/400/240','https://picsum.photos/seed/p2c/400/240'],
-    techSpecs: { framework: ['GPT-4'], tokenCount: 128000 },
-    codeSnippet: `// Legal document review\nconst analysis = await client.messages.create({ model: 'claude-3-opus' });`,
-    location: { city: 'New York', lat: 40.71, lng: -74.01 },
-  },
-  {
-    ...allListings[2],
-    images: ['https://picsum.photos/seed/p3a/400/240','https://picsum.photos/seed/p3b/400/240','https://picsum.photos/seed/p3c/400/240'],
-    techSpecs: { framework: ['SDXL','ComfyUI'], vram: 8 },
-    codeSnippet: `# Load LoRA in Stable Diffusion\npipe.load_lora_weights("anime_lora")\nimage = pipe(prompt, lora_scale=0.8).images[0]`,
-    location: { city: 'Tokyo', lat: 35.68, lng: 139.69 },
-  },
-  {
-    ...allListings[3],
-    images: ['https://picsum.photos/seed/p4a/400/240','https://picsum.photos/seed/p4b/400/240','https://picsum.photos/seed/p4c/400/240'],
-    techSpecs: { framework: ['Whisper'], tokenCount: 50000 },
-    codeSnippet: `# Medical transcription\nresult = whisper.transcribe("recording.mp3", model="base")`,
-    location: { city: 'Boston', lat: 42.36, lng: -71.06 },
-  },
-  {
-    ...allListings[4],
-    images: ['https://picsum.photos/seed/p5a/400/240','https://picsum.photos/seed/p5b/400/240','https://picsum.photos/seed/p5c/400/240'],
-    techSpecs: { framework: ['Claude'] },
-    codeSnippet: `// E-commerce desc generator\nconst desc = await claude.generateDescription(photo, bullets);`,
-    location: { city: 'Austin', lat: 30.27, lng: -97.74 },
-  },
-  {
-    ...allListings[5],
-    images: ['https://picsum.photos/seed/p6a/400/240','https://picsum.photos/seed/p6b/400/240','https://picsum.photos/seed/p6c/400/240'],
-    techSpecs: { framework: ['GPT-4'] },
-    codeSnippet: `// NRI tax compliance\nconst status = await checkFEMACompliance(income, investmentType);`,
-    location: { city: 'Chicago', lat: 41.88, lng: -87.63 },
-  },
-  {
-    ...allListings[6],
-    images: ['https://picsum.photos/seed/p7a/400/240','https://picsum.photos/seed/p7b/400/240','https://picsum.photos/seed/p7c/400/240'],
-    techSpecs: { gpuType: 'RTX 4090', vram: 24, flops: 82.6 },
-    codeSnippet: `# Check GPU\nimport torch\nprint(torch.cuda.get_device_name(0))`,
-    location: { city: 'Dallas', lat: 32.78, lng: -96.80 },
-  },
-  {
-    ...allListings[7],
-    images: ['https://picsum.photos/seed/p8a/400/240','https://picsum.photos/seed/p8b/400/240','https://picsum.photos/seed/p8c/400/240'],
-    techSpecs: {},
-    codeSnippet: `# OpenAI API\nclient = OpenAI(api_key="your-key")\nresponse = client.chat.completions.create(model="gpt-4o")`,
-    location: { city: 'Seattle', lat: 47.61, lng: -122.33 },
-  },
-  {
-    ...allListings[8],
-    images: ['https://picsum.photos/seed/p9a/400/240','https://picsum.photos/seed/p9b/400/240','https://picsum.photos/seed/p9c/400/240'],
-    techSpecs: {},
-    codeSnippet: `# Claude API\nresponse = anthropic.Anthropic().messages.create(model="claude-3-opus", max_tokens=1024)`,
-    location: { city: 'Remote', lat: 40.00, lng: -95.00 },
-  },
-  {
-    ...allListings[9],
-    images: ['https://picsum.photos/seed/p10a/400/240','https://picsum.photos/seed/p10b/400/240','https://picsum.photos/seed/p10c/400/240'],
-    techSpecs: { gpuType: 'A100', vram: 40, flops: 77.6, framework: ['PyTorch','TensorFlow'] },
-    codeSnippet: `# Fine-tuning on A100\nmodel = transformers.AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b")`,
-    location: { city: 'AWS-US-East', lat: 39.05, lng: -77.47 },
-  },
-  {
-    ...allListings[10],
-    images: ['https://picsum.photos/seed/p11a/400/240','https://picsum.photos/seed/p11b/400/240','https://picsum.photos/seed/p11c/400/240'],
-    techSpecs: {},
-    codeSnippet: `# Gemini API\nimport google.generativeai as genai\ngenai.configure(api_key="your-key")`,
-    location: { city: 'Remote', lat: 40.00, lng: -95.00 },
-  },
-  {
-    ...allListings[11],
-    images: ['https://picsum.photos/seed/p12a/400/240','https://picsum.photos/seed/p12b/400/240','https://picsum.photos/seed/p12c/400/240'],
-    techSpecs: { gpuType: 'RTX 4090', vram: 24, condition: 'Like New', flops: 82.6 },
-    codeSnippet: `# CUDA setup\nimport pycuda.driver as cuda\ncuda.init()`,
-    location: { city: 'Portland', lat: 45.51, lng: -122.68 },
-  },
-  {
-    ...allListings[12],
-    images: ['https://picsum.photos/seed/p13a/400/240','https://picsum.photos/seed/p13b/400/240','https://picsum.photos/seed/p13c/400/240'],
-    techSpecs: { gpuType: 'Jetson Orin', vram: 8, condition: 'New' },
-    codeSnippet: `# Jetson Orin\nfrom jetson_inference import detectNet\nnet = detectNet("ssd-mobilenet-v2", threshold=0.5)`,
-    location: { city: 'Denver', lat: 39.74, lng: -104.99 },
-  },
-  {
-    ...allListings[13],
-    images: ['https://picsum.photos/seed/p14a/400/240','https://picsum.photos/seed/p14b/400/240','https://picsum.photos/seed/p14c/400/240'],
-    techSpecs: { gpuType: 'M3 Max', vram: 48, condition: 'Refurbished' },
-    codeSnippet: `# Metal GPU\nimport torch\ntorch.mps.is_available()`,
-    location: { city: 'Miami', lat: 25.76, lng: -80.19 },
-  },
-  {
-    ...allListings[14],
-    images: ['https://picsum.photos/seed/p15a/400/240','https://picsum.photos/seed/p15b/400/240','https://picsum.photos/seed/p15c/400/240'],
-    techSpecs: { gpuType: 'Hailo-8L', vram: 2, condition: 'New' },
-    codeSnippet: `# Hailo edge AI\nfrom hailo_sdk import VisionPipeline\npipeline = VisionPipeline("model.hef")`,
-    location: { city: 'Minneapolis', lat: 44.98, lng: -93.26 },
-  },
-];
