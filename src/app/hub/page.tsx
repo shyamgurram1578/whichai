@@ -3,13 +3,13 @@
 import { motion } from "framer-motion";
 import {
   ShoppingBag, Brain, BookOpen, Briefcase, ArrowRight, Sparkles,
-  Zap, TrendingUp, Globe, ExternalLink, RefreshCw,
+  Zap, TrendingUp, Globe, ExternalLink, RefreshCw, Home,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
 
-// ── NeuralPulse category badge colors (dark-mode) ─────────────────────────
+// ── NeuralPulse category badge colors ─────────────────────────────────────
 const CATEGORY_COLORS: Record<string, string> = {
   "OpenAI":      "bg-emerald-900/60 text-emerald-300",
   "Google AI":   "bg-blue-900/60 text-blue-300",
@@ -70,7 +70,7 @@ function NeuralPulseBanner() {
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full mb-10 rounded-2xl overflow-hidden border border-violet-500/20 shadow-2xl shadow-violet-900/30"
+      className="w-full mb-10 rounded-2xl overflow-hidden border border-violet-500/20 shadow-xl shadow-violet-100/50"
       style={{ background: "linear-gradient(135deg, #0d0d24 0%, #0f0720 50%, #0d0d24 100%)" }}
     >
       {/* Banner header */}
@@ -188,9 +188,9 @@ const hubs = [
     bannerTo: "#a78bfa",
     bannerEmojis: ["🤖", "💡", "✨", "🧠", "⚡", "💎", "🛒", "🔮"],
     iconBg: "bg-violet-600 text-white",
-    border: "border-violet-500/40 hover:border-violet-400",
-    glow: "hover:shadow-[0_0_30px_rgba(124,58,237,0.25)]",
-    pill: "bg-violet-900/60 text-violet-300",
+    border: "border-violet-200 hover:border-violet-400",
+    glow: "hover:shadow-[0_0_30px_rgba(124,58,237,0.15)]",
+    pill: "bg-violet-100 text-violet-700",
     cta: "Enter Marketplace",
     ctaStyle: "bg-violet-600 hover:bg-violet-500 text-white",
     tags: ["Digital Assets", "Compute Hub", "Hardware Corner"],
@@ -208,9 +208,9 @@ const hubs = [
     bannerTo: "#22d3ee",
     bannerEmojis: ["🔬", "📊", "🧪", "💡", "🎯", "🔮", "📈", "🏆"],
     iconBg: "bg-cyan-600 text-white",
-    border: "border-cyan-500/40 hover:border-cyan-400",
-    glow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.2)]",
-    pill: "bg-cyan-900/60 text-cyan-300",
+    border: "border-cyan-200 hover:border-cyan-400",
+    glow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]",
+    pill: "bg-cyan-100 text-cyan-700",
     cta: "Explore AI",
     ctaStyle: "bg-cyan-600 hover:bg-cyan-500 text-white",
     tags: ["Model Explorer", "Benchmarks", "Side-by-Side"],
@@ -228,9 +228,9 @@ const hubs = [
     bannerTo: "#34d399",
     bannerEmojis: ["🎓", "📚", "🚀", "💻", "🏆", "🌟", "🎯", "📝"],
     iconBg: "bg-emerald-600 text-white",
-    border: "border-emerald-500/40 hover:border-emerald-400",
-    glow: "hover:shadow-[0_0_30px_rgba(52,211,153,0.2)]",
-    pill: "bg-emerald-900/60 text-emerald-300",
+    border: "border-emerald-200 hover:border-emerald-400",
+    glow: "hover:shadow-[0_0_30px_rgba(52,211,153,0.15)]",
+    pill: "bg-emerald-100 text-emerald-700",
     cta: "Start Learning",
     ctaStyle: "bg-emerald-600 hover:bg-emerald-500 text-white",
     tags: ["Prompt Engineering", "AI Courses", "Labs"],
@@ -248,9 +248,9 @@ const hubs = [
     bannerTo: "#fbbf24",
     bannerEmojis: ["🛠️", "🤝", "💼", "🔧", "⚙️", "🎯", "💰", "🚀"],
     iconBg: "bg-amber-500 text-white",
-    border: "border-amber-500/40 hover:border-amber-400",
-    glow: "hover:shadow-[0_0_30px_rgba(251,191,36,0.2)]",
-    pill: "bg-amber-900/60 text-amber-300",
+    border: "border-amber-200 hover:border-amber-400",
+    glow: "hover:shadow-[0_0_30px_rgba(251,191,36,0.15)]",
+    pill: "bg-amber-100 text-amber-700",
     cta: "Post a Task",
     ctaStyle: "bg-amber-500 hover:bg-amber-400 text-white",
     tags: ["AI Development", "Bounties", "Freelancers"],
@@ -261,25 +261,11 @@ const hubs = [
 // ── Hub Page ───────────────────────────────────────────────────────────────
 export default function HubPage() {
   return (
-    <div className="min-h-screen" style={{ background: "#07070f" }}>
-      {/* Navbar wrapper — dark */}
-      <div className="sticky top-0 z-40 border-b border-white/[0.08]" style={{ background: "#07070f" }}>
+    <div className="min-h-screen bg-white">
+      {/* Navbar */}
+      <div className="sticky top-0 z-40">
         <Navbar />
       </div>
-
-      {/* Subtle grid/dot background */}
-      <div
-        className="fixed inset-0 pointer-events-none opacity-[0.15]"
-        style={{
-          backgroundImage: "radial-gradient(circle, rgba(139,92,246,0.6) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
-      {/* Ambient glow orbs */}
-      <div className="fixed top-0 left-1/4 w-[600px] h-[600px] rounded-full blur-[180px] pointer-events-none opacity-20"
-        style={{ background: "radial-gradient(circle, #7c3aed, transparent)" }} />
-      <div className="fixed bottom-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[180px] pointer-events-none opacity-15"
-        style={{ background: "radial-gradient(circle, #0891b2, transparent)" }} />
 
       <main className="relative z-10 max-w-7xl mx-auto px-6 py-10 md:py-14">
 
@@ -293,19 +279,28 @@ export default function HubPage() {
           transition={{ duration: 0.5 }}
           className="text-center mb-10"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/30 bg-violet-900/30 text-violet-300 text-sm font-medium mb-5">
-            <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-200 bg-violet-50 text-violet-700 text-sm font-medium mb-5">
+            <Sparkles className="w-3.5 h-3.5 text-violet-500" />
             Welcome to WhichAi.cloud
           </div>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-3 text-white">
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-3 text-slate-900">
             Where do you want to go?
           </h1>
-          <p className="text-slate-400 text-base max-w-lg mx-auto leading-relaxed">
+          <p className="text-slate-500 text-base max-w-lg mx-auto leading-relaxed mb-6">
             Your AI journey starts here. Pick a destination below.
           </p>
+
+          {/* ── Home Button ───────────────────────────────────── */}
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 transition-all duration-200 shadow-sm hover:shadow-md"
+          >
+            <Home className="w-4 h-4" />
+            Back to Home
+          </Link>
         </motion.div>
 
-        {/* ── 4 Hub Cards — single horizontal row, 20% smaller ─ */}
+        {/* ── 4 Hub Cards — single horizontal row ──────────── */}
         <div className="grid grid-cols-4 gap-3">
           {hubs.map((hub, i) => {
             const Icon = hub.icon;
@@ -319,8 +314,7 @@ export default function HubPage() {
               >
                 <Link href={hub.href} className="block h-full group">
                   <div
-                    className={`relative h-full flex flex-col rounded-2xl border-2 overflow-hidden transition-all duration-300 cursor-pointer shadow-lg ${hub.border} ${hub.glow}`}
-                    style={{ background: "#0f0f24" }}
+                    className={`relative h-full flex flex-col rounded-2xl border-2 overflow-hidden transition-all duration-300 cursor-pointer shadow-sm bg-white ${hub.border} ${hub.glow}`}
                   >
                     {/* Colorful banner */}
                     <div
@@ -348,10 +342,10 @@ export default function HubPage() {
 
                     {/* Content */}
                     <div className="flex flex-col flex-1 p-3">
-                      <h2 className="text-sm font-black text-white mb-1">
+                      <h2 className="text-sm font-black text-slate-900 mb-1">
                         {hub.label}
                       </h2>
-                      <p className="text-slate-400 text-[11px] leading-relaxed flex-1 mb-3">
+                      <p className="text-slate-500 text-[11px] leading-relaxed flex-1 mb-3">
                         {hub.description}
                       </p>
 
@@ -359,8 +353,8 @@ export default function HubPage() {
                       <div className="flex gap-2 mb-2.5">
                         {hub.stats.map((stat) => (
                           <div key={stat.label} className="flex flex-col items-center">
-                            <span className="text-xs font-bold text-slate-100">{stat.val}</span>
-                            <span className="text-[10px] text-slate-500">{stat.label}</span>
+                            <span className="text-xs font-bold text-slate-800">{stat.val}</span>
+                            <span className="text-[10px] text-slate-400">{stat.label}</span>
                           </div>
                         ))}
                       </div>
@@ -397,7 +391,7 @@ export default function HubPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-center text-slate-600 text-xs mt-8"
+          className="text-center text-slate-400 text-xs mt-8"
         >
           You can always switch between sections from the navbar.
         </motion.p>
