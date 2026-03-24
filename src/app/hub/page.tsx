@@ -9,17 +9,15 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
 
-// ── NeuralPulse category badge colors ─────────────────────────────────────
+// ââ NeuralPulse: fixed tab set & light category colors âââââââââââââââââââââ
+const FIXED_TABS = ["All", "LLMs", "Startups", "Products", "Research"];
+
 const CATEGORY_COLORS: Record<string, string> = {
-  "OpenAI":      "bg-emerald-900/60 text-emerald-300",
-  "Google AI":   "bg-blue-900/60 text-blue-300",
-  "Anthropic":   "bg-orange-900/60 text-orange-300",
-  "Meta AI":     "bg-indigo-900/60 text-indigo-300",
-  "Image AI":    "bg-pink-900/60 text-pink-300",
-  "Hardware":    "bg-cyan-900/60 text-cyan-300",
-  "Open Source": "bg-purple-900/60 text-purple-300",
-  "Policy":      "bg-amber-900/60 text-amber-300",
-  "General AI":  "bg-slate-700/60 text-slate-300",
+  "LLMs":        "bg-violet-100 text-violet-700",
+  "Startups":    "bg-emerald-100 text-emerald-700",
+  "Products":    "bg-blue-100 text-blue-700",
+  "Research":    "bg-amber-100 text-amber-700",
+  "General AI":  "bg-slate-100 text-slate-500",
 };
 
 interface NewsItem {
@@ -33,7 +31,7 @@ interface NewsItem {
   time: string;
 }
 
-// ── NeuralPulse Banner ─────────────────────────────────────────────────────
+// ââ NeuralPulse Banner (white theme) âââââââââââââââââââââââââââââââââââââââ
 function NeuralPulseBanner() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,7 +60,6 @@ function NeuralPulseBanner() {
     return () => clearInterval(interval);
   }, []);
 
-  const categories = ["All", ...Array.from(new Set(news.map((n) => n.category)))];
   const filtered = filter === "All" ? news : news.filter((n) => n.category === filter);
 
   return (
@@ -70,19 +67,17 @@ function NeuralPulseBanner() {
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full mb-10 rounded-2xl overflow-hidden border border-violet-500/20 shadow-xl shadow-violet-100/50"
-      style={{ background: "linear-gradient(135deg, #0d0d24 0%, #0f0720 50%, #0d0d24 100%)" }}
+      className="w-full mb-10 rounded-2xl overflow-hidden border border-gray-200/80 shadow-lg shadow-gray-100/80 bg-white"
     >
-      {/* Banner header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-3.5 border-b border-white/[0.07]"
-        style={{ background: "linear-gradient(90deg, rgba(109,40,217,0.25) 0%, rgba(16,6,40,0.5) 50%, rgba(6,82,109,0.2) 100%)" }}>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-3.5 border-b border-gray-100 bg-gradient-to-r from-violet-50/70 via-white to-white">
         {/* Brand */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-400 to-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/40">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-400 to-violet-600 flex items-center justify-center shadow-md shadow-violet-300/40">
             <Zap className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h2 className="text-sm font-black text-white tracking-tight">NeuralPulse</h2>
+            <h2 className="text-sm font-black text-slate-900 tracking-tight">NeuralPulse</h2>
             <p className="text-[9px] text-slate-400 font-medium tracking-widest uppercase">AI News Feed</p>
           </div>
           <div className="flex items-center gap-1.5 ml-1">
@@ -90,23 +85,23 @@ function NeuralPulseBanner() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
             </span>
-            <span className="text-[10px] text-slate-400">Live · Updated {lastUpdated || "loading..."}</span>
+            <span className="text-[10px] text-slate-400">Live Â· Updated {lastUpdated || "loading..."}</span>
           </div>
         </div>
 
-        {/* Category filter pills */}
+        {/* Fixed category tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto flex-1 min-w-0 px-1">
-          {categories.slice(0, 7).map((cat) => (
+          {FIXED_TABS.map((tab) => (
             <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all whitespace-nowrap shrink-0 ${
-                filter === cat
-                  ? "bg-violet-500 text-white shadow-md shadow-violet-500/30"
-                  : "bg-white/10 text-slate-400 hover:bg-white/20 hover:text-white"
+              key={tab}
+              onClick={() => setFilter(tab)}
+              className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all whitespace-nowrap shrink-0 ${
+                filter === tab
+                  ? "bg-violet-600 text-white shadow-sm shadow-violet-300/50"
+                  : "bg-gray-100 text-slate-500 hover:bg-gray-200 hover:text-slate-700"
               }`}
             >
-              {cat}
+              {tab}
             </button>
           ))}
         </div>
@@ -114,26 +109,30 @@ function NeuralPulseBanner() {
         {/* Refresh */}
         <button
           onClick={() => fetchNews(true)}
-          className={`p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-all shrink-0 ${refreshing ? "animate-spin" : ""}`}
+          className={`p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-gray-100 transition-all shrink-0 ${refreshing ? "animate-spin" : ""}`}
           title="Refresh"
         >
           <RefreshCw className="w-3.5 h-3.5" />
         </button>
       </div>
 
-      {/* News grid — 3 columns × 2 rows */}
+      {/* News grid â 3 columns Ã 2 rows */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-0">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="animate-pulse px-5 py-4 border-b border-r border-white/[0.05]">
-              <div className="h-2 bg-white/10 rounded w-1/3 mb-2" />
-              <div className="h-3 bg-white/10 rounded w-full mb-1.5" />
-              <div className="h-3 bg-white/10 rounded w-4/5" />
+            <div key={i} className="animate-pulse px-5 py-4 border-b border-r border-gray-100">
+              <div className="h-2 bg-gray-200 rounded w-1/3 mb-2" />
+              <div className="h-3 bg-gray-100 rounded w-full mb-1.5" />
+              <div className="h-3 bg-gray-100 rounded w-4/5" />
             </div>
           ))}
         </div>
+      ) : filtered.length === 0 ? (
+        <div className="py-10 text-center text-slate-400 text-sm">
+          No {filter} stories right now â try another tab or refresh.
+        </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 divide-x divide-y divide-white/[0.05]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 divide-x divide-y divide-gray-100">
           {filtered.slice(0, 6).map((item, idx) => (
             <motion.a
               key={item.id}
@@ -142,22 +141,22 @@ function NeuralPulseBanner() {
               rel="noopener noreferrer"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: idx * 0.06 }}
-              className="group px-5 py-4 hover:bg-white/[0.04] transition-colors flex flex-col gap-1.5"
+              transition={{ delay: idx * 0.05 }}
+              className="group px-5 py-4 hover:bg-violet-50/40 transition-colors flex flex-col gap-1.5"
             >
               <div className="flex items-center justify-between gap-2">
                 <span className={`inline-block text-[9px] font-bold px-2 py-0.5 rounded-full ${CATEGORY_COLORS[item.category] || CATEGORY_COLORS["General AI"]}`}>
                   {item.category}
                 </span>
-                <span className="text-[9px] text-slate-600 shrink-0">{item.time}</span>
+                <span className="text-[9px] text-slate-400 shrink-0">{item.time}</span>
               </div>
-              <p className="text-[11px] font-semibold text-slate-200 leading-snug line-clamp-2 group-hover:text-violet-300 transition-colors">
+              <p className="text-[11px] font-semibold text-slate-700 leading-snug line-clamp-2 group-hover:text-violet-700 transition-colors">
                 {item.title}
               </p>
-              <div className="flex items-center gap-3 text-[9px] text-slate-500 mt-auto">
+              <div className="flex items-center gap-3 text-[9px] text-slate-400 mt-auto">
                 <span className="flex items-center gap-0.5"><TrendingUp className="w-2.5 h-2.5" />{item.points}</span>
                 <span className="flex items-center gap-0.5"><Globe className="w-2.5 h-2.5" />{item.source}</span>
-                <ExternalLink className="w-2.5 h-2.5 ml-auto text-slate-700 group-hover:text-violet-400 transition-colors" />
+                <ExternalLink className="w-2.5 h-2.5 ml-auto text-slate-300 group-hover:text-violet-400 transition-colors" />
               </div>
             </motion.a>
           ))}
@@ -165,16 +164,16 @@ function NeuralPulseBanner() {
       )}
 
       {/* Footer */}
-      <div className="px-5 py-2 border-t border-white/[0.05]" style={{ background: "rgba(0,0,0,0.2)" }}>
-        <p className="text-[9px] text-slate-600 text-center">
-          RSS + Supabase · refresh runs daily at 8pm CST/CDT
+      <div className="px-5 py-2 border-t border-gray-100 bg-gray-50/50">
+        <p className="text-[9px] text-slate-400 text-center">
+          RSS + Supabase Â· auto-refreshes daily at 6am CST
         </p>
       </div>
     </motion.div>
   );
 }
 
-// ── Hub data ───────────────────────────────────────────────────────────────
+// ââ Hub destination data âââââââââââââââââââââââââââââââââââââââââââââââââââ
 const hubs = [
   {
     id: "marketplace",
@@ -183,18 +182,20 @@ const hubs = [
     label: "Marketplace",
     tagline: "The Hub",
     description:
-      "Buy and sell AI prompts, agents, fine-tuned models, GPU compute, and hardware — all in one place.",
-    bannerFrom: "#7c3aed",
-    bannerTo: "#a78bfa",
-    bannerEmojis: ["🤖", "💡", "✨", "🧠", "⚡", "💎", "🛒", "🔮"],
-    iconBg: "bg-violet-600 text-white",
-    border: "border-violet-200 hover:border-violet-400",
-    glow: "hover:shadow-[0_0_30px_rgba(124,58,237,0.15)]",
-    pill: "bg-violet-100 text-violet-700",
+      "Buy and sell AI prompts, agents, fine-tuned models, GPU compute, and hardware â all in one place.",
+    g1: "#3b0764", g2: "#6d28d9", g3: "#a78bfa",
+    shimmer: "rgba(167,139,250,0.25)",
+    bannerEmojis: [
+      { e: "ð¤", x: "10%", y: "15%", r: "-12deg", s: 1.1 },
+      { e: "ð", x: "80%", y: "10%", r: "8deg",  s: 0.9 },
+      { e: "â¡", x: "20%", y: "70%", r: "5deg",  s: 1.2 },
+      { e: "ð§ ", x: "70%", y: "65%", r: "-8deg", s: 1.0 },
+      { e: "â¨", x: "50%", y: "40%", r: "15deg", s: 0.8 },
+      { e: "ð", x: "90%", y: "45%", r: "-5deg", s: 0.95 },
+    ],
     cta: "Enter Marketplace",
-    ctaStyle: "bg-violet-600 hover:bg-violet-500 text-white",
-    tags: ["Digital Assets", "Compute Hub", "Hardware Corner"],
-    stats: [{ val: "15K+", label: "listings" }, { val: "4.8★", label: "avg rating" }, { val: "99%", label: "satisfaction" }],
+    tags: ["Digital Assets", "Compute Hub", "Hardware"],
+    stats: [{ val: "15K+", label: "listings" }, { val: "4.8â", label: "avg rating" }, { val: "99%", label: "satisfaction" }],
   },
   {
     id: "know-your-ai",
@@ -204,15 +205,17 @@ const hubs = [
     tagline: "Discover & Compare",
     description:
       "Explore, benchmark, and compare AI models across categories. Find the perfect model for your use case.",
-    bannerFrom: "#0369a1",
-    bannerTo: "#22d3ee",
-    bannerEmojis: ["🔬", "📊", "🧪", "💡", "🎯", "🔮", "📈", "🏆"],
-    iconBg: "bg-cyan-600 text-white",
-    border: "border-cyan-200 hover:border-cyan-400",
-    glow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]",
-    pill: "bg-cyan-100 text-cyan-700",
+    g1: "#0c4a6e", g2: "#0284c7", g3: "#22d3ee",
+    shimmer: "rgba(34,211,238,0.2)",
+    bannerEmojis: [
+      { e: "ð¬", x: "12%", y: "20%", r: "6deg",   s: 1.1 },
+      { e: "ð", x: "78%", y: "12%", r: "-10deg", s: 0.9 },
+      { e: "ð¯", x: "22%", y: "72%", r: "-6deg",  s: 1.15 },
+      { e: "ð", x: "68%", y: "68%", r: "10deg",  s: 1.0 },
+      { e: "ð¡", x: "48%", y: "38%", r: "-15deg", s: 0.85 },
+      { e: "ð", x: "88%", y: "50%", r: "8deg",   s: 0.95 },
+    ],
     cta: "Explore AI",
-    ctaStyle: "bg-cyan-600 hover:bg-cyan-500 text-white",
     tags: ["Model Explorer", "Benchmarks", "Side-by-Side"],
     stats: [{ val: "200+", label: "models" }, { val: "Live", label: "benchmarks" }, { val: "Daily", label: "updates" }],
   },
@@ -224,16 +227,18 @@ const hubs = [
     tagline: "Grow Your Skills",
     description:
       "Courses, guides, and hands-on labs to master prompt engineering, AI development, and ML fundamentals.",
-    bannerFrom: "#047857",
-    bannerTo: "#34d399",
-    bannerEmojis: ["🎓", "📚", "🚀", "💻", "🏆", "🌟", "🎯", "📝"],
-    iconBg: "bg-emerald-600 text-white",
-    border: "border-emerald-200 hover:border-emerald-400",
-    glow: "hover:shadow-[0_0_30px_rgba(52,211,153,0.15)]",
-    pill: "bg-emerald-100 text-emerald-700",
+    g1: "#064e3b", g2: "#059669", g3: "#34d399",
+    shimmer: "rgba(52,211,153,0.2)",
+    bannerEmojis: [
+      { e: "ð", x: "10%", y: "18%", r: "-8deg",  s: 1.1 },
+      { e: "ð", x: "80%", y: "14%", r: "12deg",  s: 0.9 },
+      { e: "ð", x: "18%", y: "68%", r: "6deg",   s: 1.2 },
+      { e: "ð»", x: "72%", y: "70%", r: "-10deg", s: 1.0 },
+      { e: "ð", x: "50%", y: "42%", r: "18deg",  s: 0.8 },
+      { e: "ð", x: "88%", y: "42%", r: "-4deg",  s: 0.95 },
+    ],
     cta: "Start Learning",
-    ctaStyle: "bg-emerald-600 hover:bg-emerald-500 text-white",
-    tags: ["Prompt Engineering", "AI Courses", "Labs"],
+    tags: ["Prompt Engineering", "AI Courses", "Free Labs"],
     stats: [{ val: "50+", label: "courses" }, { val: "Hands-on", label: "labs" }, { val: "Free", label: "to start" }],
   },
   {
@@ -243,36 +248,37 @@ const hubs = [
     label: "AI Task Board",
     tagline: "Get It Built",
     description:
-      "Post any AI task — custom LLMs, fine-tuned models, AI agents, chatbots — and get it done by vetted AI developers. Pay only on delivery.",
-    bannerFrom: "#b45309",
-    bannerTo: "#fbbf24",
-    bannerEmojis: ["🛠️", "🤝", "💼", "🔧", "⚙️", "🎯", "💰", "🚀"],
-    iconBg: "bg-amber-500 text-white",
-    border: "border-amber-200 hover:border-amber-400",
-    glow: "hover:shadow-[0_0_30px_rgba(251,191,36,0.15)]",
-    pill: "bg-amber-100 text-amber-700",
+      "Post any AI task â custom LLMs, fine-tuned models, AI agents, chatbots â and get it done by vetted AI developers. Pay only on delivery.",
+    g1: "#78350f", g2: "#d97706", g3: "#fbbf24",
+    shimmer: "rgba(251,191,36,0.2)",
+    bannerEmojis: [
+      { e: "ð ï¸", x: "10%", y: "16%", r: "10deg",  s: 1.1 },
+      { e: "ð¤", x: "80%", y: "10%", r: "-8deg",  s: 0.9 },
+      { e: "ð¼", x: "20%", y: "72%", r: "-6deg",  s: 1.15 },
+      { e: "âï¸", x: "70%", y: "68%", r: "12deg",  s: 1.0 },
+      { e: "ð°", x: "50%", y: "38%", r: "-12deg", s: 0.85 },
+      { e: "ð", x: "88%", y: "48%", r: "5deg",   s: 0.95 },
+    ],
     cta: "Post a Task",
-    ctaStyle: "bg-amber-500 hover:bg-amber-400 text-white",
-    tags: ["AI Development", "Bounties", "Freelancers"],
+    tags: ["AI Development", "Bounties", "Escrow"],
     stats: [{ val: "500+", label: "AI devs" }, { val: "48hr", label: "avg delivery" }, { val: "Escrow", label: "protected" }],
   },
 ];
 
-// ── Hub Page ───────────────────────────────────────────────────────────────
+// ââ Hub Page âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 export default function HubPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navbar */}
       <div className="sticky top-0 z-40">
         <Navbar />
       </div>
 
       <main className="relative z-10 max-w-7xl mx-auto px-6 py-10 md:py-14">
 
-        {/* ── NeuralPulse Banner ─────────────────────────────── */}
+        {/* ââ NeuralPulse Banner âââââââââââââââââââââââââââââââ */}
         <NeuralPulseBanner />
 
-        {/* ── Header ────────────────────────────────────────── */}
+        {/* ââ Header ââââââââââââââââââââââââââââââââââââââââââ */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -289,8 +295,6 @@ export default function HubPage() {
           <p className="text-slate-500 text-base max-w-lg mx-auto leading-relaxed mb-6">
             Your AI journey starts here. Pick a destination below.
           </p>
-
-          {/* ── Home Button ───────────────────────────────────── */}
           <Link
             href="/"
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 transition-all duration-200 shadow-sm hover:shadow-md"
@@ -300,83 +304,117 @@ export default function HubPage() {
           </Link>
         </motion.div>
 
-        {/* ── 4 Hub Cards — single horizontal row ──────────── */}
-        <div className="grid grid-cols-4 gap-3">
+        {/* ââ 4 Hub Cards âââââââââââââââââââââââââââââââââââââ */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {hubs.map((hub, i) => {
             const Icon = hub.icon;
             return (
               <motion.div
                 key={hub.id}
-                initial={{ opacity: 0, y: 32 }}
+                initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.1, duration: 0.5 }}
-                whileHover={{ y: -4 }}
+                transition={{ delay: 0.08 + i * 0.1, duration: 0.5, ease: "easeOut" }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                style={{ transition: "box-shadow 0.3s" }}
               >
                 <Link href={hub.href} className="block h-full group">
                   <div
-                    className={`relative h-full flex flex-col rounded-2xl border-2 overflow-hidden transition-all duration-300 cursor-pointer shadow-sm bg-white ${hub.border} ${hub.glow}`}
+                    className="relative rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-shadow duration-500"
+                    style={{ minHeight: 360 }}
                   >
-                    {/* Colorful banner */}
+                    {/* Full gradient background */}
                     <div
-                      className="relative h-[72px] flex items-center justify-center overflow-hidden"
-                      style={{ background: `linear-gradient(135deg, ${hub.bannerFrom}, ${hub.bannerTo})` }}
-                    >
-                      {/* Floating emoji decoration */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="grid grid-cols-4 gap-2 opacity-20 rotate-[-8deg] scale-125">
-                          {hub.bannerEmojis.map((emoji, ei) => (
-                            <span key={ei} className="text-xl select-none">{emoji}</span>
-                          ))}
-                        </div>
-                      </div>
-                      {/* Icon circle */}
-                      <div className="relative z-10 flex flex-col items-center gap-1.5">
-                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center shadow-lg ${hub.iconBg}`}>
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/25 text-white backdrop-blur-sm">
-                          {hub.tagline}
+                      className="absolute inset-0"
+                      style={{ background: `linear-gradient(160deg, ${hub.g1} 0%, ${hub.g2} 55%, ${hub.g3} 100%)` }}
+                    />
+
+                    {/* Subtle dot pattern */}
+                    <div
+                      className="absolute inset-0 opacity-[0.07]"
+                      style={{
+                        backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)",
+                        backgroundSize: "20px 20px",
+                      }}
+                    />
+
+                    {/* Hover shimmer overlay */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"
+                      style={{ background: `radial-gradient(ellipse at 50% 0%, ${hub.shimmer}, transparent 70%)` }}
+                    />
+
+                    {/* Floating emojis */}
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                      {hub.bannerEmojis.map((em, ei) => (
+                        <span
+                          key={ei}
+                          className="absolute text-2xl select-none opacity-20 group-hover:opacity-30 transition-opacity duration-500"
+                          style={{
+                            left: em.x,
+                            top: em.y,
+                            transform: `rotate(${em.r}) scale(${em.s})`,
+                          }}
+                        >
+                          {em.e}
                         </span>
-                      </div>
+                      ))}
                     </div>
 
                     {/* Content */}
-                    <div className="flex flex-col flex-1 p-3">
-                      <h2 className="text-sm font-black text-slate-900 mb-1">
-                        {hub.label}
-                      </h2>
-                      <p className="text-slate-500 text-[11px] leading-relaxed flex-1 mb-3">
-                        {hub.description}
-                      </p>
+                    <div className="relative z-10 p-5 flex flex-col" style={{ minHeight: 360 }}>
 
-                      {/* Stats row */}
-                      <div className="flex gap-2 mb-2.5">
+                      {/* Top row: icon + tagline pill */}
+                      <div className="flex items-start justify-between mb-5">
+                        <div className="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 shadow-lg group-hover:bg-white/30 transition-colors duration-300">
+                          <Icon className="w-5 h-5 text-white" />
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-white/70 bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full border border-white/10">
+                          {hub.tagline}
+                        </span>
+                      </div>
+
+                      {/* Stats â hero numbers */}
+                      <div className="flex gap-4 mb-5">
                         {hub.stats.map((stat) => (
-                          <div key={stat.label} className="flex flex-col items-center">
-                            <span className="text-xs font-bold text-slate-800">{stat.val}</span>
-                            <span className="text-[10px] text-slate-400">{stat.label}</span>
+                          <div key={stat.label}>
+                            <div className="text-xl font-black text-white leading-none tracking-tight">
+                              {stat.val}
+                            </div>
+                            <div className="text-[10px] text-white/50 mt-0.5 font-medium">
+                              {stat.label}
+                            </div>
                           </div>
                         ))}
                       </div>
 
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-1 mb-2.5">
-                        {hub.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${hub.pill}`}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+                      {/* Frosted glass panel at bottom */}
+                      <div className="mt-auto bg-black/25 backdrop-blur-md rounded-2xl p-4 border border-white/15 group-hover:bg-black/30 transition-colors duration-300">
+                        <h2 className="text-[15px] font-black text-white mb-1.5 tracking-tight">
+                          {hub.label}
+                        </h2>
+                        <p className="text-white/65 text-[11px] leading-relaxed mb-3">
+                          {hub.description}
+                        </p>
 
-                      {/* CTA */}
-                      <div
-                        className={`flex items-center justify-center gap-1.5 w-full py-1.5 rounded-xl text-xs font-bold transition-all duration-200 ${hub.ctaStyle}`}
-                      >
-                        {hub.cta}
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-1 mb-3.5">
+                          {hub.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="text-[10px] px-2.5 py-0.5 rounded-full bg-white/10 text-white/75 font-semibold border border-white/10 group-hover:bg-white/15 transition-colors"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* CTA row */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-[13px] font-bold text-white">{hub.cta}</span>
+                          <div className="w-7 h-7 rounded-full bg-white/20 border border-white/20 flex items-center justify-center group-hover:bg-white/35 group-hover:scale-110 group-hover:border-white/40 transition-all duration-200">
+                            <ArrowRight className="w-3.5 h-3.5 text-white group-hover:translate-x-0.5 transition-transform" />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -390,7 +428,7 @@ export default function HubPage() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 0.7 }}
           className="text-center text-slate-400 text-xs mt-8"
         >
           You can always switch between sections from the navbar.
