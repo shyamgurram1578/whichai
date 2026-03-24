@@ -42,6 +42,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         getProfile(session.user.id).then(setProfile);
       }
       setLoading(false);
+    }).catch(() => {
+      // If getSession fails for any reason, stop loading so the navbar renders
+      setLoading(false);
     });
 
     // Listen for changes
