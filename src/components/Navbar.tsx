@@ -40,16 +40,16 @@ export default function Navbar() {
   }, []);
 
   const handleSignOut = async () => {
+    setDropdownOpen(false);
+    setMobileOpen(false);
     try {
-      setDropdownOpen(false);
-      setMobileOpen(false);
       await signOut();
     } catch {
-      // Ignore errors â still redirect
-    } finally {
-      // Force a full page reload so all client state (auth, cache) is cleared
-      window.location.href = "/";
+      // Ignore errors — still redirect
     }
+    // Force a hard reload to clear all auth state (React cache, Supabase tokens, etc.)
+    // Using replace so the back button doesn't return the user to a protected page
+    window.location.replace("/");
   };
 
   const displayName = profile?.first_name || user?.email?.split("@")[0] || "User";
